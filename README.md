@@ -29,7 +29,7 @@ npm run dev
 
 En Windows (PowerShell) usa `Copy-Item .env.example .env` en lugar de `cp`.
 
-La aplicación queda disponible en `http://localhost:5173`. Mientras el inicio de sesión real no esté listo (TKT-007), la pantalla de login muestra en modo desarrollo unos botones para entrar como Administrador, Docente o Estudiante. Ese bloque no existe en la compilación de producción.
+La aplicación queda disponible en `http://localhost:5173`. Para entrar, el servidor debe estar corriendo con los usuarios de prueba creados (`npm run semilla` en `proyectoGrado-server`): admin@cambridge.edu.co, docente@cambridge.edu.co o estudiante@cambridge.edu.co, con la contraseña que definiste en `SEMILLA_CONTRASENA`.
 
 ## Scripts
 
