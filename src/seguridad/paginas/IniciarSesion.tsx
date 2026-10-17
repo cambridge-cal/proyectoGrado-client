@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import { AlertCircle, Eye, EyeOff, LogIn } from 'lucide-react'
+import { AlertCircle, LogIn } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router'
 import { mensajeDeError } from '../../compartido/api'
-import { Boton, Campo } from '../../compartido/ui'
+import { Boton, Campo, CampoContrasena } from '../../compartido/ui'
 import { INICIO_POR_ROL, useAuth } from '../almacenAuth'
 import {
   destinoTrasIniciarSesion,
@@ -25,7 +25,6 @@ export function IniciarSesion() {
 
   const [datos, setDatos] = useState<DatosLogin>({ email: '', contrasena: '' })
   const [errores, setErrores] = useState<ErroresLogin>({})
-  const [verContrasena, setVerContrasena] = useState(false)
 
   const login = useMutation({
     mutationFn: () =>
@@ -86,34 +85,15 @@ export function IniciarSesion() {
           autoFocus
         />
 
-        <div className="relative">
-          <Campo
-            etiqueta="Contraseña"
-            type={verContrasena ? 'text' : 'password'}
-            name="contrasena"
-            autoComplete="current-password"
-            placeholder="Tu contraseña"
-            value={datos.contrasena}
-            onChange={(e) => cambiar('contrasena', e.target.value)}
-            error={errores.contrasena}
-            className="[&_input]:pr-11"
-          />
-          <button
-            type="button"
-            onClick={() => setVerContrasena((visible) => !visible)}
-            aria-label={
-              verContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'
-            }
-            aria-pressed={verContrasena}
-            className="absolute top-[29px] right-1.5 flex size-9 items-center justify-center rounded-lg text-texto-suave hover:bg-superficie-2 hover:text-texto focus-visible:ring-4 focus-visible:ring-primario/15 focus-visible:outline-none"
-          >
-            {verContrasena ? (
-              <EyeOff className="size-4" aria-hidden />
-            ) : (
-              <Eye className="size-4" aria-hidden />
-            )}
-          </button>
-        </div>
+        <CampoContrasena
+          etiqueta="Contraseña"
+          name="contrasena"
+          autoComplete="current-password"
+          placeholder="Tu contraseña"
+          value={datos.contrasena}
+          onChange={(e) => cambiar('contrasena', e.target.value)}
+          error={errores.contrasena}
+        />
 
         <div className="flex justify-end">
           <Link

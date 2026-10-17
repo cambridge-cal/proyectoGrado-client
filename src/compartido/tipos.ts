@@ -34,3 +34,26 @@ export const NOMBRE_ROL: Record<Rol, string> = {
   DOCENTE: 'Docente',
   ESTUDIANTE: 'Estudiante',
 }
+
+/** Cuenta de usuario tal como la devuelve GET /usuarios (RF-06). */
+export interface UsuarioAdmin {
+  id: string
+  nombre: string
+  email: string
+  rol: Rol
+  activo: boolean
+  codigo: string | null
+  especialidad: string | null
+  cargaMaximaSemanal: number | null
+}
+
+/** Registro del Audit Log (RF-08). */
+export interface RegistroAuditoria {
+  id: string
+  fechaHora: string
+  modulo: string
+  accion: string
+  detalle: string | null
+  ip: string | null
+  usuario: { id: string; nombre: string; email: string; rol: Rol }
+}
