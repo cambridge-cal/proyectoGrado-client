@@ -27,3 +27,27 @@ export function destinoTrasIniciarSesion(
     return desde
   return inicio
 }
+
+/** POST /auth/recuperar-contrasena (RF-04). */
+export async function solicitarRecuperacion(email: string): Promise<string> {
+  const { data } = await api.post<{ mensaje: string }>(
+    '/auth/recuperar-contrasena',
+    { email },
+  )
+  return data.mensaje
+}
+
+/** POST /auth/restablecer-contrasena (RF-05). */
+export async function restablecerContrasena(
+  token: string,
+  nuevaContrasena: string,
+): Promise<string> {
+  const { data } = await api.post<{ mensaje: string }>(
+    '/auth/restablecer-contrasena',
+    {
+      token,
+      nuevaContrasena,
+    },
+  )
+  return data.mensaje
+}
