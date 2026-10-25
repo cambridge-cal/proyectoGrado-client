@@ -57,3 +57,75 @@ export interface RegistroAuditoria {
   ip: string | null
   usuario: { id: string; nombre: string; email: string; rol: Rol }
 }
+
+/** Configuración académica (RF-09 a RF-16). */
+export type DiaSemana = 'LUN' | 'MAR' | 'MIE' | 'JUE' | 'VIE' | 'SAB'
+export type Jornada = 'MAÑANA' | 'TARDE' | 'NOCHE'
+export type TipoAula = 'SALON' | 'LAB' | 'VIRTUAL'
+
+export const DIAS: Array<{ valor: DiaSemana; texto: string; corto: string }> = [
+  { valor: 'LUN', texto: 'Lunes', corto: 'Lun' },
+  { valor: 'MAR', texto: 'Martes', corto: 'Mar' },
+  { valor: 'MIE', texto: 'Miércoles', corto: 'Mié' },
+  { valor: 'JUE', texto: 'Jueves', corto: 'Jue' },
+  { valor: 'VIE', texto: 'Viernes', corto: 'Vie' },
+  { valor: 'SAB', texto: 'Sábado', corto: 'Sáb' },
+]
+
+export interface Periodo {
+  id: string
+  nombre: string
+  fechaInicio: string
+  fechaFin: string
+  activo: boolean
+}
+
+export interface Nivel {
+  id: string
+  codigo: string
+  nombre: string
+  idioma: string
+}
+
+export interface Curso {
+  id: string
+  nombre: string
+  intensidadHoraria: number
+  nivelIdioma: Nivel
+}
+
+export interface Grupo {
+  id: string
+  codigo: string
+  cupoMaximo: number
+  jornada: Jornada
+  codigoAcceso: string
+  curso: Curso
+}
+
+export interface Aula {
+  id: string
+  codigo: string
+  capacidad: number
+  tipo: TipoAula
+  activa: boolean
+}
+
+export interface Franja {
+  id: string
+  diaSemana: DiaSemana
+  horaInicio: string
+  horaFin: string
+  bloque: number
+}
+
+export interface DocenteConfig {
+  id: string
+  usuarioId: string
+  nombre: string
+  email: string
+  activo: boolean
+  especialidad: string
+  cargaMaximaSemanal: number
+  franjasDisponibles: number
+}

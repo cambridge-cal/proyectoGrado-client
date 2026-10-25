@@ -47,7 +47,8 @@ export function FormularioUsuario({
       if (valores.rol === 'ESTUDIANTE') datos.codigo = valores.codigo.trim()
       if (valores.rol === 'DOCENTE') {
         datos.especialidad = valores.especialidad.trim()
-        datos.cargaMaximaSemanal = Number(valores.cargaMaximaSemanal)
+        if (valores.cargaMaximaSemanal.trim() !== '')
+          datos.cargaMaximaSemanal = Number(valores.cargaMaximaSemanal)
       }
       return edicion
         ? servicioUsuarios.actualizar(usuario.id, datos)
@@ -180,7 +181,8 @@ export function FormularioUsuario({
               value={valores.cargaMaximaSemanal}
               onChange={(e) => cambiar('cargaMaximaSemanal', e.target.value)}
               error={errores.cargaMaximaSemanal}
-              ayuda="El motor de horarios no le asigna más horas que estas."
+              placeholder="40"
+              ayuda="Si lo dejas vacío se usan 40 horas. El motor no le asigna más que estas."
             />
           </>
         )}
