@@ -41,7 +41,10 @@ export function validarUsuario(v: Valores, edicion: boolean): Errores {
     if (v.especialidad.trim().length < 2)
       errores.especialidad = 'Escribe la especialidad.'
     const carga = Number(v.cargaMaximaSemanal)
-    if (!Number.isInteger(carga) || carga < 1 || carga > 60) {
+    if (
+      v.cargaMaximaSemanal.trim() !== '' &&
+      (!Number.isInteger(carga) || carga < 1 || carga > 60)
+    ) {
       errores.cargaMaximaSemanal = 'Debe ser un número entero entre 1 y 60.'
     }
   }
