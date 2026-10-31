@@ -138,6 +138,7 @@ export type EstadoValidacion =
   | 'RESPUESTA_INVALIDA'
   | 'AJUSTES_INVALIDOS'
   | 'TIEMPO_AGOTADO'
+  | 'CUOTA_AGOTADA'
   | 'ERROR'
   | 'SIN_CONFIGURAR'
 

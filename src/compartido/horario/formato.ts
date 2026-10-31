@@ -91,6 +91,7 @@ export const TEXTO_VALIDACION: Record<EstadoValidacion, string> = {
   AJUSTES_INVALIDOS:
     'Los ajustes de Gemini rompían alguna restricción y no se aplicaron.',
   TIEMPO_AGOTADO: 'Gemini no respondió a tiempo.',
+  CUOTA_AGOTADA: 'Se agotó la cuota de la API de Gemini.',
   ERROR: 'La API de Gemini devolvió un error.',
   SIN_CONFIGURAR:
     'La validación con Gemini no está configurada en el servidor.',

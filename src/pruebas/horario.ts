@@ -56,7 +56,7 @@ export function horarioDePrueba(
     creadoEn: '2026-10-30T15:00:00Z',
     validacion: {
       estado: 'APROBADO',
-      modelo: 'gemini-3.1-pro-preview',
+      modelo: 'gemini-2.5-flash',
       tiempoMs: 800,
       detalle: null,
       observaciones: [],

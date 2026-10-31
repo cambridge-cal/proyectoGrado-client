@@ -96,6 +96,9 @@ describe('Generar horario (RF-17, RF-19, RNF-13, RNF-18)', () => {
       screen.getByText(/Gemini no respondió en 60 s\./),
     ).toBeInTheDocument()
     expect(screen.getByText('Sin validar')).toBeInTheDocument()
+    expect(
+      screen.getByText(/Validación semántica con Gemini \(gemini-2\.5-flash\)/),
+    ).toBeInTheDocument()
     expect(screen.getByRole('progressbar')).toHaveAttribute(
       'aria-valuenow',
       '100',

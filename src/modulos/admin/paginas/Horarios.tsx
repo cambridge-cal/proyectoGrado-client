@@ -202,7 +202,7 @@ export function Horarios() {
                 <Tarjeta className="p-5">
                   <TituloTarjeta
                     titulo="Observaciones de Gemini"
-                    descripcion="Validación semántica del horario (RF-17)."
+                    descripcion={`Validación semántica con ${horario.validacion.modelo} (RF-17).`}
                   />
                   <ul className="mt-3 space-y-2 text-sm">
                     {horario.validacion.observaciones.map((o, i) => (

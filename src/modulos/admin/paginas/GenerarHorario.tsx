@@ -56,7 +56,7 @@ const PASOS = [
   'Validar datos: docentes, aulas y disponibilidades',
   'Algoritmo Genético',
   'Búsqueda Tabú',
-  'Validación semántica con Gemini 3.1 Pro',
+  'Validación semántica con Gemini',
   'Guardar el horario del período',
 ]
 /** Estimación del paso en curso mientras el servidor trabaja: el AG y la BT tardan pocos segundos (TKT-019). */
@@ -325,7 +325,7 @@ function PanelProgreso({
         : `${PASOS[1]} · ${resultado.generaciones} generaciones, ${intentos}`
     }
     if (i === 3)
-      return `${PASOS[3]} · ${TEXTO_VALIDACION[resultado.estadoValidacion]}`
+      return `${PASOS[3]} (${resultado.validacion.modelo}) · ${TEXTO_VALIDACION[resultado.estadoValidacion]}`
     return PASOS[i]
   }
   return (
