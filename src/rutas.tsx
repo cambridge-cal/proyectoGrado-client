@@ -49,6 +49,7 @@ export const rutas: RouteObject[] = [
           { path: 'horarios', element: <Horarios /> },
           { path: 'horarios/generar', element: <GenerarHorario /> },
           { path: 'horarios/historial', element: <HistorialHorarios /> },
+          { path: 'horarios/:horarioId', element: <Horarios /> },
           { path: 'evaluacion', element: <Evaluacion /> },
           { path: 'evaluacion/formularios', element: <Formularios /> },
           { path: 'evaluacion/asignaciones', element: <Asignaciones /> },
@@ -82,7 +83,10 @@ export const rutas: RouteObject[] = [
         element: <LayoutPortal rol="ESTUDIANTE" />,
         children: [
           { index: true, element: <DashboardEstudiante /> },
-          { path: 'evaluaciones/:evaluacionId', element: <FormulariosEstudiante /> },
+          {
+            path: 'evaluaciones/:evaluacionId',
+            element: <FormulariosEstudiante />,
+          },
           { path: 'horario', element: <HorarioEstudiante /> },
           { path: 'grupos', element: <GruposEstudiante /> },
         ],
