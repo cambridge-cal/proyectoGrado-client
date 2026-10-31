@@ -129,3 +129,78 @@ export interface DocenteConfig {
   cargaMaximaSemanal: number
   franjasDisponibles: number
 }
+
+/** Horarios generados por el motor de IA (RF-17 a RF-25). */
+export type EstadoValidacion =
+  | 'APROBADO'
+  | 'APROBADO_CON_AJUSTES'
+  | 'RECHAZADO'
+  | 'RESPUESTA_INVALIDA'
+  | 'AJUSTES_INVALIDOS'
+  | 'TIEMPO_AGOTADO'
+  | 'CUOTA_AGOTADA'
+  | 'ERROR'
+  | 'SIN_CONFIGURAR'
+
+export interface HorarioResumen {
+  id: string
+  periodo: { id: string; nombre: string }
+  fitness: number
+  generaciones: number
+  tiempoEjecucionMs: number
+  intentos: number
+  validadoGemini: boolean
+  estadoValidacion: EstadoValidacion
+  motivoValidacion: string | null
+  archivado: boolean
+  tiposAulaExcluidos: TipoAula[]
+  totalAsignaciones: number
+  creadoEn: string
+}
+
+export interface AsignacionDetalle {
+  posicion: number
+  grupo: {
+    id: string
+    codigo: string
+    curso: string
+    idioma: string
+    nivel: string
+    jornada: Jornada
+  } | null
+  docente: { id: string; nombre: string } | null
+  aula: { id: string; codigo: string; tipo: TipoAula } | null
+  franja: {
+    id: string
+    diaSemana: DiaSemana
+    horaInicio: string
+    horaFin: string
+    bloque: number
+  } | null
+}
+
+export interface ObservacionGemini {
+  tipo:
+    | 'ESPECIALIDAD'
+    | 'CONTINUIDAD_DOCENTE'
+    | 'DISTRIBUCION_SEMANAL'
+    | 'JORNADA'
+    | 'OTRO'
+  severidad: 'ALTA' | 'MEDIA' | 'BAJA'
+  descripcion: string
+  asignaciones: number[]
+}
+
+export interface HorarioDetalle extends HorarioResumen {
+  validacion: {
+    estado: EstadoValidacion
+    modelo: string
+    tiempoMs: number
+    detalle: string | null
+    observaciones: ObservacionGemini[]
+    ajustesAplicados: Array<{ posicion: number; motivo: string }>
+    /** Rondas con Gemini: 2 si tuvo que corregir sus ajustes. */
+    rondas?: number
+  }
+  asignaciones: AsignacionDetalle[]
+}

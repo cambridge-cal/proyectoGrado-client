@@ -1,17 +1,23 @@
-import { AlertCircle, CheckCircle2, Info } from 'lucide-react'
+import { AlertCircle, AlertTriangle, CheckCircle2, Info } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { cn } from '../utilidades'
 
-type TipoAviso = 'exito' | 'error' | 'info'
+type TipoAviso = 'exito' | 'error' | 'info' | 'advertencia'
 
 const ESTILOS: Record<TipoAviso, string> = {
   exito: 'border-exito/40 bg-exito/8 text-exito-texto',
   error: 'border-peligro/40 bg-peligro/8 text-peligro-texto',
   info: 'border-primario/30 bg-primario-suave text-primario-oscuro',
+  advertencia: 'border-advertencia/50 bg-advertencia/10 text-advertencia-texto',
 }
-const ICONOS = { exito: CheckCircle2, error: AlertCircle, info: Info }
+const ICONOS = {
+  exito: CheckCircle2,
+  error: AlertCircle,
+  info: Info,
+  advertencia: AlertTriangle,
+}
 
-/** Mensaje en línea de éxito, error o información (RNF-13). */
+/** Mensaje en línea de éxito, error, advertencia o información (RNF-13). */
 export function Aviso({
   tipo = 'info',
   className,
