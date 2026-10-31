@@ -109,6 +109,27 @@ describe('Generar horario (RF-17, RF-19, RNF-13, RNF-18)', () => {
     )
   })
 
+  it('indica cuando Gemini necesitó una segunda ronda para corregir sus ajustes', async () => {
+    const base = horarioDePrueba([clase('LUN', '07:00', '09:00')])
+    vi.mocked(horarios.generar).mockResolvedValue({
+      ...base,
+      estadoValidacion: 'APROBADO_CON_AJUSTES',
+      validacion: {
+        ...base.validacion,
+        estado: 'APROBADO_CON_AJUSTES',
+        rondas: 2,
+      },
+    })
+    const { usuario } = renderizar(<GenerarHorario />)
+    await usuario.click(
+      await screen.findByRole('button', { name: /Iniciar generación/ }),
+    )
+    expect(
+      await screen.findByText(/Necesitó 2 rondas para corregir sus ajustes\./),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Validado por Gemini')).toBeInTheDocument()
+  })
+
   it('informa las restricciones no satisfechas cuando no hay solución (Figura 6.4)', async () => {
     const error = errorApi(
       422,

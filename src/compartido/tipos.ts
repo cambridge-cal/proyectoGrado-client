@@ -199,6 +199,8 @@ export interface HorarioDetalle extends HorarioResumen {
     detalle: string | null
     observaciones: ObservacionGemini[]
     ajustesAplicados: Array<{ posicion: number; motivo: string }>
+    /** Rondas con Gemini: 2 si tuvo que corregir sus ajustes. */
+    rondas?: number
   }
   asignaciones: AsignacionDetalle[]
 }

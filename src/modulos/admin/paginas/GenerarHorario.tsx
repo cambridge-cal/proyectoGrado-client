@@ -324,8 +324,10 @@ function PanelProgreso({
         ? `${PASOS[1]} · la población inicial ya cumplía las restricciones, ${intentos}`
         : `${PASOS[1]} · ${resultado.generaciones} generaciones, ${intentos}`
     }
-    if (i === 3)
-      return `${PASOS[3]} (${resultado.validacion.modelo}) · ${TEXTO_VALIDACION[resultado.estadoValidacion]}`
+    if (i === 3) {
+      const rondas = resultado.validacion.rondas ?? 0
+      return `${PASOS[3]} (${resultado.validacion.modelo}) · ${TEXTO_VALIDACION[resultado.estadoValidacion]}${rondas > 1 ? ` Necesitó ${rondas} rondas para corregir sus ajustes.` : ''}`
+    }
     return PASOS[i]
   }
   return (
