@@ -1,5 +1,6 @@
 import { ClipboardList } from 'lucide-react'
 import { EnConstruccion } from '../../../compartido/paginas/EnConstruccion'
+import { PestanasEvaluacion } from '../componentes/PestanasEvaluacion'
 
 export function Evaluacion() {
   return (
@@ -10,6 +11,8 @@ export function Evaluacion() {
       ticket="TKT-041"
       requisitos="RF-37, RF-39 y RF-41"
       figma="05b · Admin - Evaluación (ajustada)"
-    />
+    >
+      <PestanasEvaluacion />
+    </EnConstruccion>
   )
 }
