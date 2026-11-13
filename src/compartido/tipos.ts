@@ -204,3 +204,19 @@ export interface HorarioDetalle extends HorarioResumen {
   }
   asignaciones: AsignacionDetalle[]
 }
+
+/** Inscripción de un estudiante a un grupo (RF-26, RF-27). */
+export interface Inscripcion {
+  id: string
+  activo: boolean
+  fechaInscripcion: string
+  fechaBaja: string | null
+  grupo: {
+    id: string
+    codigo: string
+    jornada: Jornada
+    curso: string
+    idioma: string
+    nivel: string
+  }
+}
