@@ -24,6 +24,7 @@ const respuestaDocente: RespuestaInicioSesion = {
     nombre: 'María García',
     email: 'docente@cambridge.edu.co',
     rol: 'DOCENTE',
+    autorizoDatos: true,
   },
 }
 

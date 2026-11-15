@@ -10,6 +10,7 @@ function renderizarEn(ruta: string) {
     [
       { path: '/iniciar-sesion', element: <p>Pantalla de login</p> },
       { path: '/sin-permiso', element: <p>Sin permiso</p> },
+      { path: '/autorizacion-datos', element: <p>Aviso de privacidad</p> },
       {
         path: '/admin',
         element: <ProtectedRoute roles={['ADMIN']} />,
@@ -21,11 +22,17 @@ function renderizarEn(ruta: string) {
   render(<RouterProvider router={enrutador} />)
 }
 
-function sesionCon(rol: Rol) {
+function sesionCon(rol: Rol, autorizoDatos = true) {
   useAuth.getState().iniciarSesion({
     accessToken: 'a',
     refreshToken: 'r',
-    usuario: { id: '1', nombre: 'Prueba', email: 'p@cambridge.edu.co', rol },
+    usuario: {
+      id: '1',
+      nombre: 'Prueba',
+      email: 'p@cambridge.edu.co',
+      rol,
+      autorizoDatos,
+    },
   })
 }
 
@@ -47,5 +54,11 @@ describe('ProtectedRoute', () => {
     sesionCon('ADMIN')
     renderizarEn('/admin')
     expect(screen.getByText('Vista del administrador')).toBeInTheDocument()
+  })
+
+  it('pide la autorización de datos antes de mostrar cualquier vista', () => {
+    sesionCon('ADMIN', false)
+    renderizarEn('/admin')
+    expect(screen.getByText('Aviso de privacidad')).toBeInTheDocument()
   })
 })

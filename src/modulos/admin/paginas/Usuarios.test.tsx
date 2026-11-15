@@ -54,6 +54,7 @@ describe('Usuarios (RF-06)', () => {
         nombre: admin.nombre,
         email: admin.email,
         rol: 'ADMIN',
+        autorizoDatos: true,
       },
     })
   })

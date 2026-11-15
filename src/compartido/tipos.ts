@@ -6,6 +6,8 @@ export interface UsuarioSesion {
   nombre: string
   email: string
   rol: Rol
+  /** false hasta que acepta el aviso de privacidad en su primer ingreso (Ley 1581 de 2012). */
+  autorizoDatos: boolean
 }
 
 /** Respuesta de POST /auth/login (RF-01). */

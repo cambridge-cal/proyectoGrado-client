@@ -8,6 +8,8 @@ interface EstadoAuth {
   usuario: UsuarioSesion | null
   iniciarSesion: (respuesta: RespuestaInicioSesion) => void
   actualizarTokens: (accessToken: string, refreshToken: string) => void
+  /** El usuario aceptó el aviso de privacidad (Ley 1581 de 2012). */
+  registrarAutorizacion: () => void
   cerrarSesion: () => void
 }
 
@@ -25,6 +27,10 @@ export const useAuth = create<EstadoAuth>()(
       iniciarSesion: ({ accessToken, refreshToken, usuario }) =>
         set({ accessToken, refreshToken, usuario }),
       actualizarTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
+      registrarAutorizacion: () =>
+        set((estado) => ({
+          usuario: estado.usuario ? { ...estado.usuario, autorizoDatos: true } : null,
+        })),
       cerrarSesion: () => set({ accessToken: null, refreshToken: null, usuario: null }),
     }),
     {

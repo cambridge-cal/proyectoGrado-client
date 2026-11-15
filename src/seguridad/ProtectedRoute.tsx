@@ -4,7 +4,8 @@ import { INICIO_POR_ROL, useAuth } from './almacenAuth'
 
 /**
  * Protege un grupo de rutas (Figura 6.13, RNF-15):
- * sin sesión envía al login y con un rol distinto envía a "sin permiso".
+ * sin sesión envía al login, sin autorización de datos envía al aviso de privacidad
+ * y con un rol distinto envía a "sin permiso".
  */
 export function ProtectedRoute({ roles }: { roles: Rol[] }) {
   const usuario = useAuth((estado) => estado.usuario)
@@ -13,6 +14,11 @@ export function ProtectedRoute({ roles }: { roles: Rol[] }) {
 
   if (!usuario || !accessToken) {
     return <Navigate to="/iniciar-sesion" replace state={{ desde: ubicacion.pathname }} />
+  }
+  // Primer ingreso: antes de usar el sistema debe autorizar el tratamiento de sus datos
+  // (Decreto 1377 de 2013). Las sesiones anteriores a este control no traen el dato.
+  if (!usuario.autorizoDatos) {
+    return <Navigate to="/autorizacion-datos" replace state={{ desde: ubicacion.pathname }} />
   }
   if (!roles.includes(usuario.rol)) {
     return <Navigate to="/sin-permiso" replace />
