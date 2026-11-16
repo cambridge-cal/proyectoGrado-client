@@ -9,6 +9,7 @@ export function DialogoConfirmacion({
   children,
   textoConfirmar,
   cargando,
+  confirmarDeshabilitado,
   onConfirmar,
   onCancelar,
 }: {
@@ -17,6 +18,8 @@ export function DialogoConfirmacion({
   children: ReactNode
   textoConfirmar: string
   cargando?: boolean
+  /** Bloquea el botón hasta cumplir una condición, como la confirmación escrita (RF-27). */
+  confirmarDeshabilitado?: boolean
   onConfirmar: () => void
   onCancelar: () => void
 }) {
@@ -66,7 +69,12 @@ export function DialogoConfirmacion({
           >
             Cancelar
           </Boton>
-          <Boton variante="peligro" onClick={onConfirmar} cargando={cargando}>
+          <Boton
+            variante="peligro"
+            onClick={onConfirmar}
+            cargando={cargando}
+            disabled={confirmarDeshabilitado}
+          >
             {textoConfirmar}
           </Boton>
         </div>
