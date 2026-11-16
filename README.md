@@ -63,7 +63,7 @@ src/
     └── estudiante/         Evaluaciones pendientes, formulario, horario y grupos
 ```
 
-Cada vista muestra por ahora el ticket que la implementa y la pantalla de Figma que le sirve de referencia. El ticket correspondiente reemplaza la vista base por la real.
+En el primer ingreso de cada usuario, `seguridad/paginas/AutorizacionDatos` muestra el aviso de privacidad y pide la autorización de tratamiento de datos (Ley 1581 de 2012). El correo de contacto del aviso se define con `VITE_CORREO_DATOS` en `.env`.
 
 ## Sistema de diseño
 
@@ -72,6 +72,7 @@ Los colores, la tipografía y los radios están en `src/index.css` y se usan com
 ## Documentación
 
 - Guía de diseño (Figma, rutas y tickets): [`docs/diseno.md`](docs/diseno.md)
+- Guía de uso: [`docs/guia-administrador.md` del servidor](https://github.com/cambridge-cal/proyectoGrado-server/blob/main/docs/guia-administrador.md)
 - Diagramas del sistema: [`docs/diagramas` del servidor](https://github.com/cambridge-cal/proyectoGrado-server/tree/main/docs/diagramas)
 - Forma de trabajo, ramas y commits: [`CONTRIBUTING.md`](CONTRIBUTING.md)
 

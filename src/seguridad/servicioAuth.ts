@@ -51,3 +51,8 @@ export async function restablecerContrasena(
   )
   return data.mensaje
 }
+
+/** POST /auth/autorizacion-datos: registra la autorización del titular (Ley 1581 de 2012). */
+export async function autorizarTratamientoDatos(): Promise<void> {
+  await api.post('/auth/autorizacion-datos', { acepta: true })
+}

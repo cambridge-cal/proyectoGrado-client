@@ -114,6 +114,15 @@ export function IniciarSesion() {
           {login.isPending ? 'Ingresando…' : 'Iniciar sesión'}
         </Boton>
       </form>
+      <p className="mt-6 text-center text-xs text-texto-suave">
+        Tratamos tus datos según la Ley 1581 de 2012.{' '}
+        <Link
+          to="/aviso-de-privacidad"
+          className="font-medium text-primario hover:underline"
+        >
+          Aviso de privacidad
+        </Link>
+      </p>
     </>
   )
 }

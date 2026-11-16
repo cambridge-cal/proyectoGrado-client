@@ -18,7 +18,7 @@ describe('cliente api', () => {
     useAuth.getState().iniciarSesion({
       accessToken: 'token-viejo',
       refreshToken: 'refresh-1',
-      usuario: { id: '1', nombre: 'Prueba', email: 'p@cambridge.edu.co', rol: 'ADMIN' },
+      usuario: { id: '1', nombre: 'Prueba', email: 'p@cambridge.edu.co', rol: 'ADMIN', autorizoDatos: true },
     })
   })
 

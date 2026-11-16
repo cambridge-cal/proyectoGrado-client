@@ -24,6 +24,10 @@ import { GruposEstudiante } from './modulos/estudiante/paginas/GruposEstudiante'
 import { HorarioEstudiante } from './modulos/estudiante/paginas/HorarioEstudiante'
 import { ProtectedRoute, RedireccionInicio } from './seguridad/ProtectedRoute'
 import { IniciarSesion } from './seguridad/paginas/IniciarSesion'
+import {
+  AutorizacionDatos,
+  PaginaAvisoPrivacidad,
+} from './seguridad/paginas/AutorizacionDatos'
 import { RecuperarContrasena } from './seguridad/paginas/RecuperarContrasena'
 import { RestablecerContrasena } from './seguridad/paginas/RestablecerContrasena'
 
@@ -93,6 +97,8 @@ export const rutas: RouteObject[] = [
       },
     ],
   },
+  { path: '/autorizacion-datos', element: <AutorizacionDatos /> },
+  { path: '/aviso-de-privacidad', element: <PaginaAvisoPrivacidad /> },
   { path: '/sin-permiso', element: <SinPermiso /> },
   { path: '*', element: <NoEncontrada /> },
 ]
