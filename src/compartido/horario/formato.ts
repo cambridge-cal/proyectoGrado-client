@@ -108,7 +108,8 @@ export interface FilaHorario {
 }
 
 /**
- * Organiza las asignaciones en filas por franja y columnas por día, de la mañana a la noche
+ * Organiza las asignaciones en filas por franja y columnas por día (una franja de varios
+ * días aparece en cada uno de ellos), de la mañana a la noche
  * (RF-25). De lunes a viernes siempre aparecen; el sábado solo si tiene clases.
  */
 export function organizar(asignaciones: AsignacionDetalle[]): {
@@ -118,7 +119,8 @@ export function organizar(asignaciones: AsignacionDetalle[]): {
   const conFranja = asignaciones.filter((a) => a.franja)
   const dias = DIAS.filter(
     (d) =>
-      d.valor !== 'SAB' || conFranja.some((a) => a.franja!.diaSemana === 'SAB'),
+      d.valor !== 'SAB' ||
+      conFranja.some((a) => a.franja!.dias.includes('SAB')),
   )
   const rangos = [
     ...new Set(
@@ -135,7 +137,7 @@ export function organizar(asignaciones: AsignacionDetalle[]): {
         asignaciones: conFranja
           .filter(
             (a) =>
-              a.franja!.diaSemana === dia.valor &&
+              a.franja!.dias.includes(dia.valor) &&
               a.franja!.horaInicio === inicio &&
               a.franja!.horaFin === fin,
           )

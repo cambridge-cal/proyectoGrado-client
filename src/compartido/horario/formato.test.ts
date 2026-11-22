@@ -41,6 +41,16 @@ describe('organizar (RF-25)', () => {
     ).toBe('SAB')
     expect(organizar([sinFranja]).filas).toEqual([])
   })
+
+  it('muestra un bloque de varios días en cada uno de sus días', () => {
+    const { filas } = organizar([
+      clase(['MAR', 'MIE', 'JUE'], '08:00', '10:00'),
+    ])
+    const conClase = filas[0]!.celdas
+      .filter((c) => c.asignaciones.length)
+      .map((c) => c.dia.valor)
+    expect(conClase).toEqual(['MAR', 'MIE', 'JUE'])
+  })
 })
 
 describe('formato del horario', () => {

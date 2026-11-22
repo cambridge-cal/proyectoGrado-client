@@ -7,7 +7,7 @@ import type {
 /** Asignación de prueba para la grilla del horario. */
 let posicion = 0
 export function clase(
-  dia: DiaSemana,
+  dia: DiaSemana | DiaSemana[],
   inicio: string,
   fin: string,
   codigo = 'G01',
@@ -26,8 +26,8 @@ export function clase(
     docente: { id: 'd1', nombre: 'María García' },
     aula: { id: 'a1', codigo: 'A-01', tipo: 'SALON' },
     franja: {
-      id: `${dia}${inicio}`,
-      diaSemana: dia,
+      id: `${String(dia)}${inicio}`,
+      dias: Array.isArray(dia) ? dia : [dia],
       horaInicio: inicio,
       horaFin: fin,
       bloque: 1,

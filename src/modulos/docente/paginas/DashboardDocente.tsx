@@ -63,7 +63,7 @@ export function DashboardDocente() {
       <div className="space-y-4 p-4 sm:p-8">
         {periodos.isPending || (consulta.isPending && periodos.isSuccess) ? (
           <Tarjeta
-            className="h-64 animate-pulse"
+            className="h-64 esqueleto"
             aria-label="Cargando resultados"
           />
         ) : error ? (

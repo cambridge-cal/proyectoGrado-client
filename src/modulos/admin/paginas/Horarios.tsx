@@ -163,10 +163,7 @@ export function Horarios() {
         {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
 
         {consulta.isPending ? (
-          <Tarjeta
-            className="h-72 animate-pulse"
-            aria-label="Cargando horario"
-          />
+          <Tarjeta className="h-72 esqueleto" aria-label="Cargando horario" />
         ) : noHay ? (
           <Tarjeta>
             <EstadoVacio

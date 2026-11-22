@@ -5,10 +5,13 @@ type Variante = 'primario' | 'secundario' | 'exito' | 'peligro' | 'fantasma'
 type Tamano = 'sm' | 'md' | 'lg'
 
 const VARIANTES: Record<Variante, string> = {
-  primario: 'bg-primario text-white hover:bg-primario-oscuro',
-  secundario: 'border border-borde bg-superficie text-texto hover:bg-superficie-2',
+  primario:
+    'bg-primario text-white shadow-sm shadow-primario/20 hover:bg-primario-oscuro hover:shadow-md hover:shadow-primario/25',
+  secundario:
+    'border border-borde bg-superficie text-texto hover:bg-superficie-2',
   exito: 'bg-exito-texto text-white hover:bg-[#065f46]',
-  peligro: 'border border-peligro bg-peligro/8 text-peligro-texto hover:bg-peligro/15',
+  peligro:
+    'border border-peligro bg-peligro/8 text-peligro-texto hover:bg-peligro/15',
   fantasma: 'text-primario hover:bg-primario-suave',
 }
 
@@ -40,7 +43,7 @@ export function Boton({
       disabled={disabled || cargando}
       aria-busy={cargando || undefined}
       className={cn(
-        'inline-flex items-center justify-center gap-2 font-semibold transition-colors',
+        'inline-flex items-center justify-center gap-2 font-semibold transition duration-150 enabled:active:scale-[0.98]',
         'disabled:cursor-not-allowed disabled:opacity-60',
         VARIANTES[variante],
         TAMANOS[tamano],
@@ -49,7 +52,10 @@ export function Boton({
       {...props}
     >
       {cargando && (
-        <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden />
+        <span
+          className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+          aria-hidden
+        />
       )}
       {children}
     </button>

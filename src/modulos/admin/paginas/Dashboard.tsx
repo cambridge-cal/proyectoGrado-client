@@ -1,5 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { BellRing, CalendarDays, ClipboardList } from 'lucide-react'
+import {
+  ArrowUpRight,
+  BellRing,
+  CalendarDays,
+  ClipboardList,
+  type LucideIcon,
+} from 'lucide-react'
 import { Link } from 'react-router'
 import { mensajeDeError } from '../../../compartido/api'
 import {
@@ -15,13 +21,15 @@ import {
   fechaGeneracion,
   TEXTO_VALIDACION,
 } from '../../../compartido/horario/formato'
+import { ProximasClases } from '../../../compartido/horario/ProximasClases'
 import {
   Aviso,
+  BannerSaludo,
+  CLASE_ACCION_BANNER,
   EncabezadoPagina,
   EstadoVacio,
   Insignia,
   Tarjeta,
-  TarjetaEstadistica,
   TituloTarjeta,
 } from '../../../compartido/ui'
 import { usePeriodoEvaluacion } from '../componentes/usePeriodoEvaluacion'
@@ -58,6 +66,12 @@ export function Dashboard() {
     enabled: periodoId !== undefined,
   })
 
+  const detalle = useQuery({
+    queryKey: ['horarios', 'detalle', horario.data?.id],
+    queryFn: () => horarios.obtener(horario.data!.id),
+    enabled: Boolean(horario.data?.id),
+  })
+
   const filas = resultados.data ?? []
   const promedio =
     filas.length > 0
@@ -83,10 +97,14 @@ export function Dashboard() {
       />
       <div className="space-y-4 p-4 sm:p-8">
         {cargando ? (
-          <Tarjeta
-            className="h-48 animate-pulse"
-            aria-label="Cargando resumen"
-          />
+          <div className="space-y-4" aria-label="Cargando resumen">
+            <div className="esqueleto h-56 rounded-[20px]" />
+            <div className="grid gap-4 lg:grid-cols-3">
+              {[0, 1, 2].map((k) => (
+                <div key={k} className="esqueleto h-48 rounded-tarjeta" />
+              ))}
+            </div>
+          </div>
         ) : error ? (
           <Aviso tipo="error">{mensajeDeError(error)}</Aviso>
         ) : !periodo ? (
@@ -96,39 +114,97 @@ export function Dashboard() {
           </Aviso>
         ) : (
           <>
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <TarjetaEstadistica
-                valor={String(filas.length)}
-                etiqueta="Evaluaciones con resultado"
-                ayuda="Analizadas por el pipeline KDD"
-              />
-              <TarjetaEstadistica
-                valor={promedio === null ? 'Sin datos' : puntaje(promedio)}
-                etiqueta="Promedio global"
-                ayuda="Escala de 1 a 5"
-                acento="verde"
-              />
-              <TarjetaEstadistica
-                valor={String(alertas.data?.total ?? 0)}
-                etiqueta="Alertas sin leer"
-                ayuda="Puntajes bajos y docentes sin evaluar"
-                acento="rojo"
-              />
-              <TarjetaEstadistica
-                valor={
-                  horario.data ? String(horario.data.totalAsignaciones) : '0'
-                }
-                etiqueta="Clases en el horario"
-                ayuda={
-                  horario.data
-                    ? `Generado el ${fechaGeneracion(horario.data.creadoEn)}`
-                    : 'Todavía no se ha generado'
-                }
-                acento="morado"
-              />
-            </div>
+            <BannerSaludo
+              titulo={
+                horario.data
+                  ? `${horario.data.totalAsignaciones} clases programadas en el período ${periodo.nombre}`
+                  : `El período ${periodo.nombre} todavía no tiene horario`
+              }
+              descripcion={
+                horario.data
+                  ? `Generado el ${fechaGeneracion(horario.data.creadoEn)}. ${TEXTO_VALIDACION[horario.data.estadoValidacion]}`
+                  : 'Genera el horario con el motor de IA cuando la configuración académica esté lista.'
+              }
+              accion={
+                <Link
+                  to={
+                    horario.data ? '/admin/horarios' : '/admin/horarios/generar'
+                  }
+                  className={CLASE_ACCION_BANNER}
+                >
+                  {horario.data ? 'Ver horario' : 'Generar horario'}
+                  <ArrowUpRight className="size-4" aria-hidden />
+                </Link>
+              }
+            >
+              <ul className="escalonado grid grid-cols-3 gap-2 sm:gap-3">
+                <TarjetaModulo
+                  numero="01"
+                  icono={CalendarDays}
+                  titulo="Horarios"
+                  valor={
+                    horario.data ? String(horario.data.totalAsignaciones) : '0'
+                  }
+                  detalle={
+                    horario.data
+                      ? horario.data.validadoGemini
+                        ? 'clases · validado por Gemini'
+                        : 'clases · sin validar por Gemini'
+                      : 'sin horario generado'
+                  }
+                  fondo="bg-azul-suave"
+                  ruta="/admin/horarios"
+                />
+                <TarjetaModulo
+                  numero="02"
+                  icono={ClipboardList}
+                  titulo="Evaluación"
+                  valor={promedio === null ? '—' : puntaje(promedio)}
+                  detalle={
+                    promedio === null
+                      ? 'promedio global · sin resultados'
+                      : `promedio global de ${filas.length} ${filas.length === 1 ? 'evaluación' : 'evaluaciones'}`
+                  }
+                  progreso={promedio === null ? undefined : promedio / 5}
+                  fondo="bg-morado-suave"
+                  ruta="/admin/evaluacion"
+                />
+                <TarjetaModulo
+                  numero="03"
+                  icono={BellRing}
+                  titulo="Alertas"
+                  valor={String(alertas.data?.total ?? 0)}
+                  detalle="sin leer · puntajes bajos y docentes sin evaluar"
+                  fondo="bg-naranja-suave"
+                  ruta="/admin/evaluacion/alertas"
+                />
+              </ul>
+            </BannerSaludo>
 
-            <div className="grid gap-4 lg:grid-cols-2">
+            <div className="escalonado grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+              <Tarjeta className="p-5">
+                <TituloTarjeta
+                  titulo="Próximas clases"
+                  acciones={
+                    <Link to="/admin/horarios" className={ENLACE}>
+                      Ver grilla
+                    </Link>
+                  }
+                />
+                <div className="mt-4">
+                  {detalle.isPending && horario.data ? (
+                    <div className="space-y-2" aria-label="Cargando clases">
+                      {[0, 1, 2].map((k) => (
+                        <div key={k} className="esqueleto h-16 rounded-xl" />
+                      ))}
+                    </div>
+                  ) : (
+                    <ProximasClases
+                      asignaciones={detalle.data?.asignaciones ?? []}
+                    />
+                  )}
+                </div>
+              </Tarjeta>
               <Tarjeta className="p-5">
                 <TituloTarjeta
                   titulo="Docentes con menor puntaje"
@@ -199,29 +275,67 @@ export function Dashboard() {
                 )}
               </Tarjeta>
             </div>
-
-            <Tarjeta className="flex flex-wrap items-center gap-3 p-5">
-              <CalendarDays
-                className="size-5 shrink-0 text-primario"
-                aria-hidden
-              />
-              <p className="min-w-0 flex-1 text-sm text-texto">
-                {horario.data
-                  ? `Horario activo. ${TEXTO_VALIDACION[horario.data.estadoValidacion]}`
-                  : 'Este período todavía no tiene un horario generado.'}
-              </p>
-              <Link
-                to={
-                  horario.data ? '/admin/horarios' : '/admin/horarios/generar'
-                }
-                className={ENLACE}
-              >
-                {horario.data ? 'Ver horario' : 'Generar horario'}
-              </Link>
-            </Tarjeta>
           </>
         )}
       </div>
     </>
+  )
+}
+
+/** Tarjeta de color dentro del banner, con enlace al módulo (inspirada en el Figma 13). */
+function TarjetaModulo({
+  numero,
+  icono: Icono,
+  titulo,
+  valor,
+  detalle,
+  progreso,
+  fondo,
+  ruta,
+}: {
+  numero: string
+  icono: LucideIcon
+  titulo: string
+  valor: string
+  detalle: string
+  progreso?: number
+  fondo: string
+  ruta: string
+}) {
+  return (
+    <li>
+      <Link
+        to={ruta}
+        className={`elevable group flex h-full flex-col rounded-2xl p-3 text-marino-900 focus-visible:outline-white sm:p-4 ${fondo}`}
+      >
+        <span className="flex items-center justify-between text-xs font-semibold text-marino-900/60">
+          {numero}
+          <ArrowUpRight
+            className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            aria-hidden
+          />
+        </span>
+        <Icono className="mt-2 size-5 sm:mt-4 sm:size-6" aria-hidden />
+        <span className="mt-2 text-[13px] font-bold sm:mt-3 sm:text-[15px]">
+          {titulo}
+        </span>
+        <span className="mt-1 text-xl leading-none font-bold sm:text-[26px]">
+          {valor}
+        </span>
+        <span className="mt-1.5 hidden text-[11px] leading-snug text-marino-900/70 sm:block">
+          {detalle}
+        </span>
+        {progreso !== undefined && (
+          <span className="mt-3 h-1.5 overflow-hidden rounded-full bg-marino-900/10">
+            <span
+              className="block h-full rounded-full bg-marino-900 transition-[width] duration-700"
+              style={{
+                width: `${Math.round(Math.min(1, Math.max(0, progreso)) * 100)}%`,
+              }}
+            />
+          </span>
+        )}
+      </Link>
+    </li>
   )
 }

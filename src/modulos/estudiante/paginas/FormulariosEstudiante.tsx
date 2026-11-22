@@ -133,10 +133,7 @@ export function FormulariosEstudiante() {
   if (consulta.isPending) {
     return (
       <div className="p-4 sm:p-8">
-        <Tarjeta
-          className="h-64 animate-pulse"
-          aria-label="Cargando evaluación"
-        />
+        <Tarjeta className="h-64 esqueleto" aria-label="Cargando evaluación" />
       </div>
     )
   }

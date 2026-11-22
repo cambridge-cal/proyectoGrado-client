@@ -47,14 +47,14 @@ const docente: DocenteConfig = {
 }
 const lunes: Franja = {
   id: 'f1',
-  diaSemana: 'LUN',
+  dias: ['LUN'],
   horaInicio: '07:00',
   horaFin: '09:00',
   bloque: 1,
 }
 const martes: Franja = {
   id: 'f2',
-  diaSemana: 'MAR',
+  dias: ['MAR'],
   horaInicio: '07:00',
   horaFin: '09:00',
   bloque: 2,
@@ -142,5 +142,31 @@ describe('Configuración académica (RF-09 a RF-16)', () => {
     expect(
       await screen.findByText('Se guardó la disponibilidad del docente.'),
     ).toBeInTheDocument()
+  })
+
+  it('crea una franja que se repite de martes a jueves (RF-14)', async () => {
+    vi.mocked(franjas.listar).mockResolvedValue(pagina([lunes]))
+    vi.mocked(franjas.crear).mockResolvedValue(lunes)
+    const { usuario } = renderizar(<Configuracion />, '/?pestana=franjas')
+    expect(await screen.findByText('Lun')).toBeInTheDocument()
+    await usuario.click(screen.getByRole('button', { name: /Nueva franja/ }))
+    await usuario.click(screen.getByLabelText('Lunes'))
+    await usuario.click(screen.getByRole('button', { name: 'Crear franja' }))
+    expect(
+      await screen.findByText('Marca al menos un día.'),
+    ).toBeInTheDocument()
+    for (const dia of ['Martes', 'Miércoles', 'Jueves'])
+      await usuario.click(screen.getByLabelText(dia))
+    await usuario.type(screen.getByLabelText(/Hora de inicio/), '08:00')
+    await usuario.type(screen.getByLabelText(/Hora de fin/), '10:00')
+    await usuario.click(screen.getByRole('button', { name: 'Crear franja' }))
+    await waitFor(() =>
+      expect(franjas.crear).toHaveBeenCalledWith({
+        dias: ['MAR', 'MIE', 'JUE'],
+        horaInicio: '08:00',
+        horaFin: '10:00',
+        bloque: 1,
+      }),
+    )
   })
 })

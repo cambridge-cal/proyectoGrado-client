@@ -1,5 +1,5 @@
 import { LogOut } from 'lucide-react'
-import { NavLink, Outlet } from 'react-router'
+import { NavLink, Outlet, useLocation } from 'react-router'
 import { useAuth } from '../../seguridad/almacenAuth'
 import { cerrarSesion } from '../../seguridad/sesion'
 import { NAVEGACION } from '../navegacion'
@@ -11,17 +11,22 @@ import { cn } from '../utilidades'
 export function LayoutPortal({ rol }: { rol: 'DOCENTE' | 'ESTUDIANTE' }) {
   const usuario = useAuth((estado) => estado.usuario)
   const esDocente = rol === 'DOCENTE'
+  const { pathname } = useLocation()
 
   return (
     <div className="min-h-dvh">
-      <header className="sticky top-0 z-30 border-b border-borde bg-superficie">
+      <header className="sticky top-0 z-30 border-b border-borde bg-superficie/90 backdrop-blur-md">
         <div className="flex h-16 items-center gap-3 px-4 sm:px-6">
-          <Logo className="size-8 bg-linear-to-br from-marino-900 to-azul-700 text-[15px]" />
+          <Logo className="h-9 w-auto" />
           <p className="truncate text-sm font-semibold text-texto">
-            Cambridge Academy<span className="hidden sm:inline"> · Sistema de Gestión</span>
+            Cambridge Academy
+            <span className="hidden sm:inline"> · Sistema de Gestión</span>
           </p>
 
-          <nav className="ml-6 hidden h-16 items-stretch gap-1 md:flex" aria-label="Secciones">
+          <nav
+            className="ml-6 hidden h-16 items-stretch gap-1 md:flex"
+            aria-label="Secciones"
+          >
             {NAVEGACION[rol].map(({ ruta, etiqueta, icono: Icono, exacta }) => (
               <NavLink
                 key={ruta}
@@ -29,7 +34,7 @@ export function LayoutPortal({ rol }: { rol: 'DOCENTE' | 'ESTUDIANTE' }) {
                 end={exacta}
                 className={({ isActive }) =>
                   cn(
-                    'flex items-center gap-2 border-b-2 px-3 text-[13px] font-medium transition-colors',
+                    'flex items-center gap-2 border-b-2 px-3 text-[13px] font-medium transition-colors duration-200',
                     isActive
                       ? 'border-primario text-primario'
                       : 'border-transparent text-texto-suave hover:text-texto',
@@ -44,7 +49,9 @@ export function LayoutPortal({ rol }: { rol: 'DOCENTE' | 'ESTUDIANTE' }) {
 
           <div className="ml-auto flex items-center gap-3">
             <span className="hidden sm:block">
-              <Insignia tono={esDocente ? 'verde' : 'ambar'}>{NOMBRE_ROL[rol]}</Insignia>
+              <Insignia tono={esDocente ? 'verde' : 'ambar'}>
+                {NOMBRE_ROL[rol]}
+              </Insignia>
             </span>
             <Avatar
               nombre={usuario?.nombre ?? '?'}
@@ -67,7 +74,10 @@ export function LayoutPortal({ rol }: { rol: 'DOCENTE' | 'ESTUDIANTE' }) {
         </div>
 
         {/* Pestañas en pantallas pequeñas (RNF-12) */}
-        <nav className="flex gap-1 overflow-x-auto border-t border-borde px-2 md:hidden" aria-label="Secciones">
+        <nav
+          className="flex gap-1 overflow-x-auto border-t border-borde px-2 md:hidden"
+          aria-label="Secciones"
+        >
           {NAVEGACION[rol].map(({ ruta, etiqueta, icono: Icono, exacta }) => (
             <NavLink
               key={ruta}
@@ -76,7 +86,9 @@ export function LayoutPortal({ rol }: { rol: 'DOCENTE' | 'ESTUDIANTE' }) {
               className={({ isActive }) =>
                 cn(
                   'flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-3 text-xs font-medium',
-                  isActive ? 'border-primario text-primario' : 'border-transparent text-texto-suave',
+                  isActive
+                    ? 'border-primario text-primario'
+                    : 'border-transparent text-texto-suave',
                 )
               }
             >
@@ -88,7 +100,9 @@ export function LayoutPortal({ rol }: { rol: 'DOCENTE' | 'ESTUDIANTE' }) {
       </header>
 
       <main id="contenido" className="min-w-0">
-        <Outlet />
+        <div key={pathname} className="animate-entrar">
+          <Outlet />
+        </div>
       </main>
     </div>
   )

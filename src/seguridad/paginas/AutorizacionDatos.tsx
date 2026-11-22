@@ -27,7 +27,7 @@ function Marco({ titulo, children }: { titulo: string; children: ReactNode }) {
         className="mx-auto w-full max-w-2xl rounded-tarjeta border border-borde bg-superficie p-6 shadow-tarjeta sm:p-8"
       >
         <div className="flex items-center gap-3">
-          <Logo className="size-9 bg-linear-to-br from-marino-900 to-azul-700 text-base" />
+          <Logo className="h-11 w-auto" />
           <h1 className="text-xl font-bold text-texto">{titulo}</h1>
         </div>
         <div className="mt-5">{children}</div>

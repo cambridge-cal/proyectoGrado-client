@@ -7,13 +7,33 @@ import {
   GrillaHorario,
   LeyendaNiveles,
 } from '../../../compartido/horario/GrillaHorario'
+import { ProximasClases } from '../../../compartido/horario/ProximasClases'
 import { consultaHorarios } from '../../../compartido/horario/servicio'
+import type { AsignacionDetalle } from '../../../compartido/tipos'
 import {
   Aviso,
+  BannerSaludo,
   EncabezadoPagina,
   EstadoVacio,
   Tarjeta,
 } from '../../../compartido/ui'
+
+/** Horas de clase a la semana: duración de cada franja por el número de días que ocupa. */
+function horasSemanales(asignaciones: AsignacionDetalle[]): number {
+  const minutos = (hora: string) => {
+    const [h, m] = hora.split(':').map(Number)
+    return (h ?? 0) * 60 + (m ?? 0)
+  }
+  return asignaciones.reduce((total, a) => {
+    if (!a.franja) return total
+    const duracion = minutos(a.franja.horaFin) - minutos(a.franja.horaInicio)
+    return total + (duracion * a.franja.dias.length) / 60
+  }, 0)
+}
+
+const formatoHoras = new Intl.NumberFormat('es-CO', {
+  maximumFractionDigits: 1,
+})
 
 const sinHorario = (error: unknown) =>
   axios.isAxiosError(error) && error.response?.status === 404
@@ -48,8 +68,8 @@ export function HorarioDocente() {
       />
       <div className="space-y-4 p-4 sm:p-8">
         {consulta.isPending ? (
-          <Tarjeta
-            className="h-64 animate-pulse"
+          <div
+            className="esqueleto h-64 rounded-tarjeta"
             aria-label="Cargando horario"
           />
         ) : consulta.isError ? (
@@ -74,6 +94,18 @@ export function HorarioDocente() {
           </Tarjeta>
         ) : (
           <>
+            <BannerSaludo
+              titulo={`Dictas ${horas} ${horas === 1 ? 'grupo' : 'grupos'} y ${formatoHoras.format(horasSemanales(horario!.asignaciones))} horas de clase por semana`}
+              descripcion="Abajo tienes la grilla completa. Puedes filtrarla por aula, nivel o jornada."
+            >
+              <div className="rounded-2xl bg-superficie p-4 text-texto">
+                <ProximasClases
+                  asignaciones={horario!.asignaciones}
+                  mostrarDocente={false}
+                  limite={3}
+                />
+              </div>
+            </BannerSaludo>
             {controles}
             <Tarjeta className="overflow-hidden">
               <GrillaHorario asignaciones={filtradas} mostrarDocente={false} />

@@ -23,6 +23,10 @@ const asignaciones = [
   },
 ]
 
+/** La tarjeta muestra el curso y, debajo, el código del grupo; se buscan juntos. */
+const clase_ = (texto: string) => (_: string, el: Element | null) =>
+  el?.tagName === 'P' && el.textContent === texto
+
 describe('Horarios (RF-21, RF-22, RF-24, RF-25)', () => {
   beforeEach(() => {
     vi.resetAllMocks()
@@ -37,7 +41,9 @@ describe('Horarios (RF-21, RF-22, RF-24, RF-25)', () => {
     expect(screen.getByText('Validado por Gemini')).toBeInTheDocument()
     expect(screen.getByText(/Aptitud 1\.00 · 1,2 s/)).toBeInTheDocument()
     const tabla = screen.getByRole('table')
-    expect(within(tabla).getByText('Inglés A1 · G01')).toBeInTheDocument()
+    expect(
+      within(tabla).getByText(clase_('Inglés A1 · G01')),
+    ).toBeInTheDocument()
     expect(within(tabla).getByText('R. López')).toBeInTheDocument()
   })
 
@@ -46,8 +52,12 @@ describe('Horarios (RF-21, RF-22, RF-24, RF-25)', () => {
     await screen.findByRole('table')
     await usuario.selectOptions(screen.getByLabelText('Docente'), 'd2')
     const tabla = screen.getByRole('table')
-    expect(within(tabla).queryByText('Inglés A1 · G01')).not.toBeInTheDocument()
-    expect(within(tabla).getByText('Inglés A1 · G02')).toBeInTheDocument()
+    expect(
+      within(tabla).queryByText(clase_('Inglés A1 · G01')),
+    ).not.toBeInTheDocument()
+    expect(
+      within(tabla).getByText(clase_('Inglés A1 · G02')),
+    ).toBeInTheDocument()
   })
 
   it('avisa cuando el horario quedó sin validar por Gemini (RNF-18)', async () => {

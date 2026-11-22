@@ -1,10 +1,11 @@
 import { Check } from 'lucide-react'
-import { DIAS, type Franja } from '../tipos'
+import { DIAS, type DiaSemana, type Franja } from '../tipos'
 import { cn } from '../utilidades'
 
 /**
  * Grilla de días por franjas para marcar la disponibilidad de un docente (RF-16,
  * docs/diseno.md: "Mi disponibilidad"). Cada celda es un botón que se activa o desactiva.
+ * Una franja de varios días (por ejemplo martes a jueves) se marca en todos sus días a la vez.
  */
 export function GrillaDisponibilidad({
   franjas,
@@ -17,13 +18,15 @@ export function GrillaDisponibilidad({
   onCambiar: (seleccion: Set<string>) => void
   deshabilitada?: boolean
 }) {
-  const dias = DIAS.filter((d) => franjas.some((f) => f.diaSemana === d.valor))
+  const dias = DIAS.filter((d) => franjas.some((f) => f.dias.includes(d.valor)))
   const horarios = [
     ...new Set(franjas.map((f) => `${f.horaInicio}-${f.horaFin}`)),
   ].sort()
   const franjaEn = (dia: string, horario: string) =>
     franjas.find(
-      (f) => f.diaSemana === dia && `${f.horaInicio}-${f.horaFin}` === horario,
+      (f) =>
+        f.dias.includes(dia as DiaSemana) &&
+        `${f.horaInicio}-${f.horaFin}` === horario,
     )
 
   const alternar = (ids: string[], activar: boolean) => {
@@ -37,18 +40,18 @@ export function GrillaDisponibilidad({
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[560px] border-separate border-spacing-1 text-sm">
+      <table className="sin-resaltado w-full min-w-[560px] border-separate border-spacing-1 text-sm">
         <thead>
           <tr>
             <th
               scope="col"
-              className="w-28 px-2 py-1 text-left text-xs font-semibold text-texto-suave"
+              className="sticky left-0 z-10 w-28 bg-superficie px-2 py-1 text-left text-xs font-semibold text-texto-suave"
             >
               Franja
             </th>
             {dias.map((dia) => {
               const ids = franjas
-                .filter((f) => f.diaSemana === dia.valor)
+                .filter((f) => f.dias.includes(dia.valor))
                 .map((f) => f.id)
               const todas = ids.every((id) => seleccionadas.has(id))
               return (
@@ -85,7 +88,7 @@ export function GrillaDisponibilidad({
             <tr key={horario}>
               <th
                 scope="row"
-                className="px-2 py-1 text-left font-mono text-xs font-normal whitespace-nowrap text-texto-suave"
+                className="sticky left-0 z-10 bg-superficie px-2 py-1 text-left font-mono text-xs font-normal whitespace-nowrap text-texto-suave"
               >
                 {horario.replace('-', ' a ')}
               </th>
@@ -109,14 +112,16 @@ export function GrillaDisponibilidad({
                       aria-label={`${dia.texto} ${horario.replace('-', ' a ')}: ${activa ? 'disponible' : 'no disponible'}`}
                       onClick={() => alternar([franja.id], !activa)}
                       className={cn(
-                        'flex h-10 w-full items-center justify-center rounded-lg border text-xs font-medium transition-colors',
+                        'flex h-10 w-full items-center justify-center rounded-lg border text-xs font-medium transition duration-150 enabled:active:scale-95',
                         activa
                           ? 'border-exito bg-exito/12 text-exito-texto'
                           : 'border-borde bg-superficie text-texto-suave hover:border-primario/50',
                         deshabilitada && 'cursor-default opacity-70',
                       )}
                     >
-                      {activa ? <Check className="size-4" aria-hidden /> : null}
+                      {activa ? (
+                        <Check className="size-4 animate-escalar" aria-hidden />
+                      ) : null}
                     </button>
                   </td>
                 )

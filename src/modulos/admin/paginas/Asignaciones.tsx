@@ -154,7 +154,7 @@ export function Asignaciones() {
 
         {cargando ? (
           <Tarjeta
-            className="h-48 animate-pulse"
+            className="h-48 esqueleto"
             aria-label="Cargando asignaciones"
           />
         ) : error ? (
