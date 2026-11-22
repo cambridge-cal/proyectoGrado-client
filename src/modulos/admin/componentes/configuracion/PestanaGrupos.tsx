@@ -74,6 +74,16 @@ export function PestanaGrupos({ onAviso }: PropsPestana) {
       requerido: true,
       opciones: JORNADAS,
     },
+    {
+      nombre: 'intensidadHoraria',
+      etiqueta: 'Intensidad semanal (horas)',
+      tipo: 'numero',
+      min: 1,
+      max: 40,
+      placeholder: 'La del curso',
+      ayuda:
+        'Solo si difiere del curso, por ejemplo 6 en modalidad intensiva o 3 en regular. El horario usa un bloque que cubra estas horas.',
+    },
   ]
 
   return (
@@ -106,6 +116,11 @@ export function PestanaGrupos({ onAviso }: PropsPestana) {
           {
             encabezado: 'Jornada',
             celda: (g) => JORNADAS.find((j) => j.valor === g.jornada)?.texto,
+          },
+          {
+            encabezado: 'Horas',
+            celda: (g) => g.intensidadHoraria ?? g.curso.intensidadHoraria,
+            derecha: true,
           },
           { encabezado: 'Cupo', celda: (g) => g.cupoMaximo, derecha: true },
           {
@@ -155,6 +170,10 @@ export function PestanaGrupos({ onAviso }: PropsPestana) {
             cursoId: fila?.curso.id ?? cursoId,
             cupoMaximo: fila ? String(fila.cupoMaximo) : '20',
             jornada: fila?.jornada ?? 'MAÑANA',
+            intensidadHoraria:
+              fila?.intensidadHoraria == null
+                ? ''
+                : String(fila.intensidadHoraria),
           }}
           validar={(v) => ({
             codigo: /^[A-Za-z0-9-]{2,30}$/.test(texto(v.codigo))
@@ -167,6 +186,9 @@ export function PestanaGrupos({ onAviso }: PropsPestana) {
               cursoId: v.cursoId,
               cupoMaximo: aNumero(v.cupoMaximo),
               jornada: v.jornada,
+              intensidadHoraria: texto(v.intensidadHoraria)
+                ? aNumero(v.intensidadHoraria)
+                : null,
             }
             return fila
               ? grupos.actualizar(fila.id, datos)

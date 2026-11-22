@@ -16,12 +16,12 @@ vi.mock('../servicios/disponibilidad', () => ({
 
 const f = (
   id: string,
-  diaSemana: Franja['diaSemana'],
+  dia: Franja['dias'][number] | Franja['dias'],
   horaInicio: string,
   horaFin: string,
 ): Franja => ({
   id,
-  diaSemana,
+  dias: Array.isArray(dia) ? dia : [dia],
   horaInicio,
   horaFin,
   bloque: 1,
@@ -58,6 +58,26 @@ describe('Mi disponibilidad (RF-16)', () => {
     )
     expect(
       await screen.findByText(/Se guardó tu disponibilidad/),
+    ).toBeInTheDocument()
+  })
+
+  it('una franja de varios días se marca en todos sus días a la vez', async () => {
+    const bloque = f('d', ['MAR', 'MIE', 'JUE'], '08:00', '10:00')
+    vi.mocked(franjas.todas).mockResolvedValue([bloque])
+    vi.mocked(miDisponibilidad.obtener).mockResolvedValue([])
+    const { usuario } = renderizar(<DisponibilidadDocente />)
+    const miercoles = await screen.findByRole('button', {
+      name: 'Miércoles 08:00 a 10:00: no disponible',
+    })
+    await usuario.click(miercoles)
+    for (const dia of ['Martes', 'Miércoles', 'Jueves'])
+      expect(
+        screen.getByRole('button', {
+          name: `${dia} 08:00 a 10:00: disponible`,
+        }),
+      ).toHaveAttribute('aria-pressed', 'true')
+    expect(
+      screen.getByText('1 franjas disponibles · cambios sin guardar'),
     ).toBeInTheDocument()
   })
 

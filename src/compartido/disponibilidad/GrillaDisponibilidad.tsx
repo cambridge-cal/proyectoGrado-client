@@ -1,10 +1,11 @@
 import { Check } from 'lucide-react'
-import { DIAS, type Franja } from '../tipos'
+import { DIAS, type DiaSemana, type Franja } from '../tipos'
 import { cn } from '../utilidades'
 
 /**
  * Grilla de días por franjas para marcar la disponibilidad de un docente (RF-16,
  * docs/diseno.md: "Mi disponibilidad"). Cada celda es un botón que se activa o desactiva.
+ * Una franja de varios días (por ejemplo martes a jueves) se marca en todos sus días a la vez.
  */
 export function GrillaDisponibilidad({
   franjas,
@@ -17,13 +18,15 @@ export function GrillaDisponibilidad({
   onCambiar: (seleccion: Set<string>) => void
   deshabilitada?: boolean
 }) {
-  const dias = DIAS.filter((d) => franjas.some((f) => f.diaSemana === d.valor))
+  const dias = DIAS.filter((d) => franjas.some((f) => f.dias.includes(d.valor)))
   const horarios = [
     ...new Set(franjas.map((f) => `${f.horaInicio}-${f.horaFin}`)),
   ].sort()
   const franjaEn = (dia: string, horario: string) =>
     franjas.find(
-      (f) => f.diaSemana === dia && `${f.horaInicio}-${f.horaFin}` === horario,
+      (f) =>
+        f.dias.includes(dia as DiaSemana) &&
+        `${f.horaInicio}-${f.horaFin}` === horario,
     )
 
   const alternar = (ids: string[], activar: boolean) => {
@@ -48,7 +51,7 @@ export function GrillaDisponibilidad({
             </th>
             {dias.map((dia) => {
               const ids = franjas
-                .filter((f) => f.diaSemana === dia.valor)
+                .filter((f) => f.dias.includes(dia.valor))
                 .map((f) => f.id)
               const todas = ids.every((id) => seleccionadas.has(id))
               return (

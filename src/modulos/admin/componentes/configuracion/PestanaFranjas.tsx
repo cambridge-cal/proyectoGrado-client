@@ -1,6 +1,11 @@
 import { Clock, Rows3 } from 'lucide-react'
 import { useState } from 'react'
-import { DIAS, type DiaSemana, type Franja } from '../../../../compartido/tipos'
+import {
+  DIAS,
+  textoDias,
+  type DiaSemana,
+  type Franja,
+} from '../../../../compartido/tipos'
 import { Boton, Selector } from '../../../../compartido/ui'
 import { franjas } from '../../servicios/configuracion'
 import {
@@ -13,13 +18,11 @@ import { BarraPestana, type PropsPestana } from './comun'
 import { aNumero, texto } from './formato'
 
 const CAMPOS: CampoFormulario[] = [
-  {
-    nombre: 'diaSemana',
-    etiqueta: 'Día',
-    tipo: 'seleccion',
-    requerido: true,
-    opciones: DIAS.map((d) => ({ valor: d.valor, texto: d.texto })),
-  },
+  ...DIAS.map((d) => ({
+    nombre: d.valor,
+    etiqueta: d.texto,
+    tipo: 'interruptor' as const,
+  })),
   {
     nombre: 'horaInicio',
     etiqueta: 'Hora de inicio',
@@ -34,9 +37,12 @@ const CAMPOS: CampoFormulario[] = [
     requerido: true,
     min: 1,
     max: 30,
-    ayuda: 'Posición de la franja dentro del día.',
+    ayuda: 'Posición del bloque dentro del día; sirve para ordenarlos.',
   },
 ]
+
+const diasMarcados = (v: Valores) =>
+  DIAS.filter((d) => v[d.valor] === true).map((d) => d.valor as DiaSemana)
 
 const CAMPOS_LOTE: CampoFormulario[] = [
   ...DIAS.map((d) => ({
@@ -100,13 +106,11 @@ export function PestanaFranjas({ onAviso }: PropsPestana) {
       <TablaRecurso<Franja>
         clave={['franjas', dia]}
         tamano={15}
-        consultar={(page, size) =>
-          franjas.listar({ page, size, diaSemana: dia })
-        }
+        consultar={(page, size) => franjas.listar({ page, size, dia })}
         columnas={[
           {
-            encabezado: 'Día',
-            celda: (f) => DIAS.find((d) => d.valor === f.diaSemana)?.texto,
+            encabezado: 'Días',
+            celda: (f) => textoDias(f.dias),
           },
           { encabezado: 'Bloque', celda: (f) => f.bloque, derecha: true },
           {
@@ -127,26 +131,35 @@ export function PestanaFranjas({ onAviso }: PropsPestana) {
         onEditar={(f) => setPanel({ fila: f })}
         eliminar={{
           ejecutar: (f) => franjas.eliminar(f.id),
-          nombre: (f) => `la franja ${f.diaSemana} ${f.horaInicio}`,
+          nombre: (f) => `la franja ${textoDias(f.dias)} ${f.horaInicio}`,
         }}
         onAviso={onAviso}
       />
       {panel && (
         <FormularioRecurso
           titulo={fila ? 'Editar franja' : 'Nueva franja'}
+          descripcion="Marca todos los días en que se repite el bloque, por ejemplo martes, miércoles y jueves de 08:00 a 10:00."
           campos={CAMPOS}
           iniciales={{
-            diaSemana: fila?.diaSemana ?? (dia || 'LUN'),
+            ...Object.fromEntries(
+              DIAS.map((d) => [
+                d.valor,
+                fila ? fila.dias.includes(d.valor) : d.valor === (dia || 'LUN'),
+              ]),
+            ),
             horaInicio: fila?.horaInicio ?? '',
             horaFin: fila?.horaFin ?? '',
             bloque: fila ? String(fila.bloque) : '1',
           }}
-          validar={(v) =>
-            validarHoras(texto(v.horaInicio), texto(v.horaFin), 'horaFin')
-          }
+          validar={(v) => ({
+            ...validarHoras(texto(v.horaInicio), texto(v.horaFin), 'horaFin'),
+            ...(diasMarcados(v).length
+              ? {}
+              : { LUN: 'Marca al menos un día.' }),
+          })}
           guardar={(v) => {
             const datos = {
-              diaSemana: v.diaSemana,
+              dias: diasMarcados(v),
               horaInicio: v.horaInicio,
               horaFin: v.horaFin,
               bloque: aNumero(v.bloque),
@@ -170,7 +183,7 @@ export function PestanaFranjas({ onAviso }: PropsPestana) {
       {lote && (
         <FormularioRecurso
           titulo="Crear varias franjas"
-          descripcion="Genera los bloques de los días marcados, uno tras otro, con la misma duración."
+          descripcion="Genera bloques de un solo día, uno tras otro y con la misma duración, en cada día marcado. Para un bloque que se repite varios días usa Nueva franja."
           campos={CAMPOS_LOTE}
           iniciales={{
             ...Object.fromEntries(
@@ -183,15 +196,13 @@ export function PestanaFranjas({ onAviso }: PropsPestana) {
           }}
           validar={(v: Valores) => ({
             ...validarHoras(texto(v.desde), texto(v.hasta), 'hasta'),
-            ...(DIAS.some((d) => v[d.valor] === true)
+            ...(diasMarcados(v).length
               ? {}
               : { LUN: 'Marca al menos un día.' }),
           })}
           guardar={(v) =>
             franjas.crearLote({
-              dias: DIAS.filter((d) => v[d.valor] === true).map(
-                (d) => d.valor as DiaSemana,
-              ),
+              dias: diasMarcados(v),
               desde: texto(v.desde),
               hasta: texto(v.hasta),
               duracionMinutos: aNumero(v.duracionMinutos),

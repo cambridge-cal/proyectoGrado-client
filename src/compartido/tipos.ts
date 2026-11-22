@@ -74,6 +74,22 @@ export const DIAS: Array<{ valor: DiaSemana; texto: string; corto: string }> = [
   { valor: 'SAB', texto: 'Sábado', corto: 'Sáb' },
 ]
 
+/**
+ * Días de una franja en texto corto: "Mar a Jue" si son tres o más seguidos,
+ * "Lun y Vie" o "Sáb" en los demás casos.
+ */
+export function textoDias(dias: readonly DiaSemana[]): string {
+  const indices = DIAS.map((d, i) => (dias.includes(d.valor) ? i : -1)).filter(
+    (i) => i >= 0,
+  )
+  const cortos = indices.map((i) => DIAS[i]!.corto)
+  const seguidos = indices.every((i, k) => k === 0 || i === indices[k - 1]! + 1)
+  if (cortos.length >= 3 && seguidos)
+    return `${cortos[0]} a ${cortos[cortos.length - 1]}`
+  if (cortos.length <= 1) return cortos.join('')
+  return `${cortos.slice(0, -1).join(', ')} y ${cortos[cortos.length - 1]}`
+}
+
 export interface Periodo {
   id: string
   nombre: string
@@ -101,6 +117,8 @@ export interface Grupo {
   codigo: string
   cupoMaximo: number
   jornada: Jornada
+  /** Horas semanales del grupo si difieren de las del curso (por ejemplo 6 en intensivo). */
+  intensidadHoraria: number | null
   codigoAcceso: string
   curso: Curso
 }
@@ -115,7 +133,8 @@ export interface Aula {
 
 export interface Franja {
   id: string
-  diaSemana: DiaSemana
+  /** Días en que se repite el bloque, por ejemplo MAR, MIE y JUE. */
+  dias: DiaSemana[]
   horaInicio: string
   horaFin: string
   bloque: number
@@ -174,7 +193,7 @@ export interface AsignacionDetalle {
   aula: { id: string; codigo: string; tipo: TipoAula } | null
   franja: {
     id: string
-    diaSemana: DiaSemana
+    dias: DiaSemana[]
     horaInicio: string
     horaFin: string
     bloque: number
