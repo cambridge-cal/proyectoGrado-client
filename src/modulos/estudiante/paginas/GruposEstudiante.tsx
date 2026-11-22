@@ -151,10 +151,7 @@ export function GruposEstudiante() {
         </Tarjeta>
 
         {consulta.isPending ? (
-          <Tarjeta
-            className="h-40 animate-pulse"
-            aria-label="Cargando grupos"
-          />
+          <Tarjeta className="h-40 esqueleto" aria-label="Cargando grupos" />
         ) : consulta.isError ? (
           <Aviso tipo="error">{mensajeDeError(consulta.error)}</Aviso>
         ) : (

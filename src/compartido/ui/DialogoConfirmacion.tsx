@@ -39,7 +39,7 @@ export function DialogoConfirmacion({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-marino-900/40"
+        className="absolute inset-0 animate-aparecer bg-marino-900/40 backdrop-blur-[2px]"
         onClick={cargando ? undefined : onCancelar}
         aria-hidden
       />
@@ -47,7 +47,7 @@ export function DialogoConfirmacion({
         role="alertdialog"
         aria-modal="true"
         aria-labelledby={idTitulo}
-        className="relative w-full max-w-[420px] rounded-tarjeta bg-superficie p-6 shadow-xl"
+        className="relative w-full max-w-[420px] animate-escalar rounded-tarjeta bg-superficie p-6 shadow-xl"
       >
         <div className="flex gap-3">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-peligro/10 text-peligro-texto">

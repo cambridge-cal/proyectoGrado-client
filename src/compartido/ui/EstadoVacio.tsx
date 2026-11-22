@@ -13,12 +13,14 @@ export function EstadoVacio({
   accion?: ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center px-6 py-12 text-center">
+    <div className="flex animate-aparecer flex-col items-center px-6 py-12 text-center">
       <span className="flex size-12 items-center justify-center rounded-full bg-primario/10 text-primario">
         <Icono className="size-6" aria-hidden />
       </span>
       <p className="mt-4 text-[15px] font-semibold text-texto">{titulo}</p>
-      {descripcion && <p className="mt-1 max-w-md text-sm text-texto-suave">{descripcion}</p>}
+      {descripcion && (
+        <p className="mt-1 max-w-md text-sm text-texto-suave">{descripcion}</p>
+      )}
       {accion && <div className="mt-5">{accion}</div>}
     </div>
   )

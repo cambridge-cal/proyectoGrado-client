@@ -51,10 +51,7 @@ export function HorarioEstudiante() {
       />
       <div className="space-y-4 p-4 sm:p-8">
         {consulta.isPending ? (
-          <Tarjeta
-            className="h-64 animate-pulse"
-            aria-label="Cargando horario"
-          />
+          <Tarjeta className="h-64 esqueleto" aria-label="Cargando horario" />
         ) : consulta.isError ? (
           sinHorario(consulta.error) ? (
             <Tarjeta>

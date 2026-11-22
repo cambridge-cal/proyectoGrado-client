@@ -1,6 +1,6 @@
 import { LogOut, Menu, X } from 'lucide-react'
 import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router'
+import { NavLink, Outlet, useLocation } from 'react-router'
 import { useAuth } from '../../seguridad/almacenAuth'
 import { cerrarSesion } from '../../seguridad/sesion'
 import { NAVEGACION } from '../navegacion'
@@ -12,6 +12,7 @@ import { cn } from '../utilidades'
 export function LayoutAdmin() {
   const usuario = useAuth((estado) => estado.usuario)
   const [menuAbierto, setMenuAbierto] = useState(false)
+  const { pathname } = useLocation()
   return (
     <div className="min-h-dvh lg:pl-60">
       <a
@@ -31,13 +32,13 @@ export function LayoutAdmin() {
         >
           <Menu className="size-5" />
         </button>
-        <Logo className="size-8 text-[15px]" />
+        <Logo variante="blanco" className="h-8 w-auto" />
         <span className="text-sm font-semibold">Cambridge Academy</span>
       </div>
 
       {menuAbierto && (
         <div
-          className="fixed inset-0 z-40 bg-marino-900/50 lg:hidden"
+          className="fixed inset-0 z-40 animate-aparecer bg-marino-900/50 backdrop-blur-[2px] lg:hidden"
           onClick={() => setMenuAbierto(false)}
           aria-hidden
         />
@@ -45,16 +46,16 @@ export function LayoutAdmin() {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-60 flex-col bg-linear-to-b from-marino-900 to-marino-800 text-white transition-transform',
+          'fixed inset-y-0 left-0 z-50 flex w-60 flex-col bg-linear-to-b from-marino-900 to-marino-800 text-white transition-transform duration-300 ease-(--ease-suave)',
           menuAbierto ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
         aria-label="Menú principal"
       >
         <div className="flex items-center gap-3 px-5 pt-6 pb-5">
-          <Logo />
+          <Logo variante="blanco" className="h-10 w-auto" />
           <div className="leading-tight">
-            <p className="text-[13px] font-bold">Cambridge</p>
-            <p className="text-[11px] text-white/50">Academy</p>
+            <p className="text-[13px] font-bold tracking-wide">CAMBRIDGE</p>
+            <p className="text-[11px] text-white/55">Academy of Languages</p>
           </div>
           <button
             type="button"
@@ -76,7 +77,7 @@ export function LayoutAdmin() {
               onClick={() => setMenuAbierto(false)}
               className={({ isActive }) =>
                 cn(
-                  'relative flex h-[42px] items-center gap-3 rounded-lg px-3.5 text-[13px] transition-colors',
+                  'group relative flex h-[42px] items-center gap-3 rounded-lg px-3.5 text-[13px] transition-colors duration-200',
                   isActive
                     ? 'bg-white/12 font-semibold text-white'
                     : 'text-white/65 hover:bg-white/6 hover:text-white',
@@ -86,9 +87,15 @@ export function LayoutAdmin() {
               {({ isActive }) => (
                 <>
                   {isActive && (
-                    <span className="absolute top-2 left-px h-[26px] w-[3px] rounded-sm bg-primario" aria-hidden />
+                    <span
+                      className="absolute top-2 left-px h-[26px] w-[3px] animate-escalar rounded-sm bg-primario"
+                      aria-hidden
+                    />
                   )}
-                  <Icono className="size-[18px]" aria-hidden />
+                  <Icono
+                    className="size-[18px] transition-transform duration-200 group-hover:scale-110"
+                    aria-hidden
+                  />
                   {etiqueta}
                 </>
               )}
@@ -101,7 +108,9 @@ export function LayoutAdmin() {
           <Avatar nombre={usuario?.nombre ?? '?'} />
           <div className="min-w-0 flex-1 leading-tight">
             <p className="truncate text-xs font-semibold">{usuario?.nombre}</p>
-            <p className="text-[11px] text-white/50">{usuario && NOMBRE_ROL[usuario.rol]}</p>
+            <p className="text-[11px] text-white/50">
+              {usuario && NOMBRE_ROL[usuario.rol]}
+            </p>
           </div>
           <button
             type="button"
@@ -116,7 +125,10 @@ export function LayoutAdmin() {
       </aside>
 
       <main id="contenido" className="min-w-0">
-        <Outlet />
+        {/* Cada vista entra con un leve desplazamiento (RNF-16) */}
+        <div key={pathname} className="animate-entrar">
+          <Outlet />
+        </div>
       </main>
     </div>
   )

@@ -56,23 +56,30 @@ export function IniciarSesion() {
 
   return (
     <>
-      <h2 className="text-[26px] font-bold text-texto">Bienvenido de vuelta</h2>
-      <p className="mt-2 text-sm text-texto-suave">
-        Ingresa tus credenciales para acceder
-      </p>
-      <div className="my-5 h-px bg-borde" />
+      <div className="mb-8 text-center">
+        <h2 className="text-[30px] leading-tight font-bold tracking-tight text-texto sm:text-[34px]">
+          Bienvenido de vuelta
+        </h2>
+        <p className="mt-2 text-sm text-texto-suave">
+          Ingresa tus credenciales para acceder
+        </p>
+      </div>
 
       {login.isError && (
         <div
           role="alert"
-          className="mb-5 flex items-start gap-2.5 rounded-control border border-peligro/40 bg-peligro/8 px-3.5 py-3 text-sm text-peligro-texto"
+          className="mb-5 flex animate-escalar items-start gap-2.5 rounded-control border border-peligro/40 bg-peligro/8 px-3.5 py-3 text-sm text-peligro-texto"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />
           <span>{mensajeDeError(login.error)}</span>
         </div>
       )}
 
-      <form onSubmit={enviar} noValidate className="flex flex-col gap-4">
+      <form
+        onSubmit={enviar}
+        noValidate
+        className="escalonado flex flex-col gap-4"
+      >
         <Campo
           etiqueta="Correo electrónico"
           type="email"

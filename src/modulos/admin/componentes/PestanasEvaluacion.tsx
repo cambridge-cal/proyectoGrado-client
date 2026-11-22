@@ -22,7 +22,7 @@ export function PestanasEvaluacion() {
           end={pestana.exacta}
           className={({ isActive }) =>
             cn(
-              '-mb-px border-b-2 px-3.5 py-2.5 text-sm font-semibold whitespace-nowrap',
+              '-mb-px rounded-t-lg border-b-2 px-3.5 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors duration-200 hover:bg-superficie-2',
               isActive
                 ? 'border-primario text-primario'
                 : 'border-transparent text-texto-suave hover:text-texto',

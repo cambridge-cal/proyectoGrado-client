@@ -40,12 +40,12 @@ export function GrillaDisponibilidad({
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[560px] border-separate border-spacing-1 text-sm">
+      <table className="sin-resaltado w-full min-w-[560px] border-separate border-spacing-1 text-sm">
         <thead>
           <tr>
             <th
               scope="col"
-              className="w-28 px-2 py-1 text-left text-xs font-semibold text-texto-suave"
+              className="sticky left-0 z-10 w-28 bg-superficie px-2 py-1 text-left text-xs font-semibold text-texto-suave"
             >
               Franja
             </th>
@@ -88,7 +88,7 @@ export function GrillaDisponibilidad({
             <tr key={horario}>
               <th
                 scope="row"
-                className="px-2 py-1 text-left font-mono text-xs font-normal whitespace-nowrap text-texto-suave"
+                className="sticky left-0 z-10 bg-superficie px-2 py-1 text-left font-mono text-xs font-normal whitespace-nowrap text-texto-suave"
               >
                 {horario.replace('-', ' a ')}
               </th>
@@ -112,14 +112,16 @@ export function GrillaDisponibilidad({
                       aria-label={`${dia.texto} ${horario.replace('-', ' a ')}: ${activa ? 'disponible' : 'no disponible'}`}
                       onClick={() => alternar([franja.id], !activa)}
                       className={cn(
-                        'flex h-10 w-full items-center justify-center rounded-lg border text-xs font-medium transition-colors',
+                        'flex h-10 w-full items-center justify-center rounded-lg border text-xs font-medium transition duration-150 enabled:active:scale-95',
                         activa
                           ? 'border-exito bg-exito/12 text-exito-texto'
                           : 'border-borde bg-superficie text-texto-suave hover:border-primario/50',
                         deshabilitada && 'cursor-default opacity-70',
                       )}
                     >
-                      {activa ? <Check className="size-4" aria-hidden /> : null}
+                      {activa ? (
+                        <Check className="size-4 animate-escalar" aria-hidden />
+                      ) : null}
                     </button>
                   </td>
                 )

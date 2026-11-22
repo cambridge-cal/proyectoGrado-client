@@ -140,7 +140,7 @@ export function Formularios() {
 
         {lista.isPending ? (
           <Tarjeta
-            className="h-48 animate-pulse"
+            className="h-48 esqueleto"
             aria-label="Cargando formularios"
           />
         ) : lista.isError ? (

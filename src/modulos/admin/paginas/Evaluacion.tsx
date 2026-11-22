@@ -119,7 +119,7 @@ export function Evaluacion() {
 
         {periodos.isPending || (periodo && resultados.isPending) ? (
           <Tarjeta
-            className="h-48 animate-pulse"
+            className="h-48 esqueleto"
             aria-label="Cargando resultados"
           />
         ) : error ? (

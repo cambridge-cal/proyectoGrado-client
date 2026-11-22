@@ -23,11 +23,14 @@ export function TarjetaEstadistica({
   acento?: Acento
 }) {
   return (
-    <div className="relative overflow-hidden rounded-tarjeta border border-borde bg-superficie px-5 pt-4 pb-5">
+    <div className="relative overflow-hidden rounded-tarjeta border border-borde bg-superficie px-5 pt-4 pb-5 shadow-tarjeta">
       <p className="text-[28px] leading-tight font-bold text-texto">{valor}</p>
       <p className="mt-1 text-[13px] font-semibold text-texto">{etiqueta}</p>
       {ayuda && <p className="mt-0.5 text-[11px] text-texto-suave">{ayuda}</p>}
-      <span className={cn('absolute inset-x-0 bottom-0 h-1', ACENTOS[acento])} aria-hidden />
+      <span
+        className={cn('absolute inset-x-0 bottom-0 h-1', ACENTOS[acento])}
+        aria-hidden
+      />
     </div>
   )
 }

@@ -32,7 +32,7 @@ export function Aviso({
     <div
       role={tipo === 'error' ? 'alert' : 'status'}
       className={cn(
-        'flex items-start gap-2.5 rounded-control border px-3.5 py-3 text-sm',
+        'flex animate-entrar items-start gap-2.5 rounded-control border px-3.5 py-3 text-sm',
         ESTILOS[tipo],
         className,
       )}
