@@ -38,7 +38,7 @@ export function Selector({
           id={idCampo}
           aria-invalid={error ? true : undefined}
           className={cn(
-            'h-[42px] w-full appearance-none rounded-control border bg-superficie-2 pr-9 pl-3.5 text-sm text-texto',
+            'h-[42px] w-full cursor-pointer appearance-none rounded-control border bg-superficie-2 pr-9 pl-3.5 text-sm text-texto transition-[border-color,background-color,box-shadow] duration-150 hover:border-texto-suave/40',
             'focus:border-primario focus:bg-superficie focus:ring-4 focus:ring-primario/15 focus:outline-none',
             error ? 'border-peligro' : 'border-borde',
           )}
@@ -56,7 +56,7 @@ export function Selector({
         />
       </div>
       {error && (
-        <p className="text-xs text-peligro-texto" role="alert">
+        <p className="animate-entrar text-xs text-peligro-texto" role="alert">
           {error}
         </p>
       )}

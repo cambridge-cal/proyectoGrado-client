@@ -212,7 +212,10 @@ export function Auditoria() {
                       <td className="px-3 py-3 font-mono text-xs text-texto">
                         {registro.accion}
                       </td>
-                      <td className="max-w-[260px] px-3 py-3 text-xs text-texto-suave">
+                      <td
+                        className="max-w-[300px] px-3 py-3 text-xs break-words text-texto-suave"
+                        title={registro.detalle ?? undefined}
+                      >
                         {detalleLegible(registro)}
                       </td>
                       <td className="px-5 py-3 font-mono text-xs text-texto-suave">

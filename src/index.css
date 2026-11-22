@@ -8,7 +8,8 @@
   contraste mínimo de WCAG 2.1 AA (4.5:1) cuando se usan como texto.
 */
 @theme {
-  --font-sans: 'Inter Variable', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-sans:
+    'Inter Variable', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
 
   --color-marino-900: #0e1a34;
   --color-marino-800: #152545;
@@ -42,6 +43,82 @@
   --radius-insignia: 6px;
   --radius-control: 10px;
   --radius-tarjeta: 12px;
+
+  --shadow-tarjeta:
+    0 1px 2px rgb(15 23 42 / 0.04), 0 2px 8px rgb(15 23 42 / 0.04);
+  --shadow-elevada:
+    0 4px 10px rgb(15 23 42 / 0.06), 0 12px 28px rgb(15 23 42 / 0.08);
+
+  /* Tintes claros de los colores de la marca, para las tarjetas sobre fondo oscuro */
+  --color-azul-suave: #dbe5fd;
+  --color-morado-suave: #ebe1fc;
+  --color-naranja-suave: #feead8;
+  --color-turquesa-suave: #d3f1f1;
+
+  /* Animaciones (RNF-13 y RNF-16). Se apagan con prefers-reduced-motion. */
+  --ease-suave: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --animate-entrar: entrar 0.45s var(--ease-suave) backwards;
+  --animate-aparecer: aparecer 0.3s ease-out backwards;
+  --animate-escalar: escalar 0.25s var(--ease-suave) backwards;
+  --animate-panel: panel 0.32s var(--ease-suave) backwards;
+  --animate-flotar: flotar 6s ease-in-out infinite;
+  --animate-orbitar: orbitar 40s linear infinite;
+  --animate-degradado: degradado 14s ease-in-out infinite;
+  --animate-brillo: brillo 1.4s ease-in-out infinite;
+
+  @keyframes entrar {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+  @keyframes aparecer {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes escalar {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+  @keyframes panel {
+    from {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes flotar {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  @keyframes orbitar {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes degradado {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  @keyframes brillo {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
 }
 
 @layer base {
@@ -53,8 +130,67 @@
     @apply min-h-dvh;
   }
 
+  /* Las filas de las tablas de datos se resaltan al pasar el mouse. */
+  table:not(.sin-resaltado) > tbody > tr {
+    transition: background-color 0.15s ease-out;
+  }
+  table:not(.sin-resaltado) > tbody > tr:hover {
+    background-color: var(--color-superficie-2);
+  }
+
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-primario;
+  }
+}
+
+@layer utilities {
+  /* Los hijos entran uno tras otro (listas de tarjetas, filas, menús). */
+  .escalonado > * {
+    animation: var(--animate-entrar);
+  }
+  .escalonado > :nth-child(2) {
+    animation-delay: 50ms;
+  }
+  .escalonado > :nth-child(3) {
+    animation-delay: 100ms;
+  }
+  .escalonado > :nth-child(4) {
+    animation-delay: 150ms;
+  }
+  .escalonado > :nth-child(5) {
+    animation-delay: 200ms;
+  }
+  .escalonado > :nth-child(6) {
+    animation-delay: 250ms;
+  }
+  .escalonado > :nth-child(7) {
+    animation-delay: 300ms;
+  }
+  .escalonado > :nth-child(n + 8) {
+    animation-delay: 350ms;
+  }
+
+  /* Tarjetas que se pueden abrir: suben un poco al pasar el mouse. */
+  .elevable {
+    transition:
+      transform 0.2s var(--ease-suave),
+      box-shadow 0.2s var(--ease-suave);
+  }
+  .elevable:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-elevada);
+  }
+
+  /* Esqueleto de carga con brillo que recorre la tarjeta (RNF-13). */
+  .esqueleto {
+    background-image: linear-gradient(
+      90deg,
+      var(--color-superficie-2) 25%,
+      var(--color-borde) 50%,
+      var(--color-superficie-2) 75%
+    );
+    background-size: 200% 100%;
+    animation: var(--animate-brillo);
   }
 }
 
@@ -63,6 +199,8 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }

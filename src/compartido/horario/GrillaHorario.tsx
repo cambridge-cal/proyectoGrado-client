@@ -24,19 +24,27 @@ function TarjetaClase({
   mostrarDocente: boolean
 }) {
   const nivel = grupoNivel(asignacion.grupo?.nivel)
-  const titulo = asignacion.grupo
-    ? `${asignacion.grupo.curso} · ${asignacion.grupo.codigo}`
-    : 'Grupo eliminado'
   return (
     <div
       className={cn(
-        'rounded-md border border-borde border-t-[3px] px-2.5 py-2 text-left',
+        'rounded-md border border-borde border-t-[3px] px-2.5 py-2 text-left transition duration-200 hover:-translate-y-px hover:shadow-tarjeta',
         nivel ? BORDE_NIVEL[nivel] : 'border-t-texto-suave bg-superficie-2',
       )}
     >
-      <p className="text-[12px] leading-tight font-semibold text-texto">
-        {titulo}
-      </p>
+      {asignacion.grupo ? (
+        <p className="text-[12px] leading-tight font-semibold text-texto">
+          {asignacion.grupo.curso}
+          {/* El código va en su propia línea; el separador solo lo leen los lectores de pantalla */}
+          <span className="block truncate font-mono text-[10.5px] font-medium text-texto-suave">
+            <span className="sr-only"> · </span>
+            {asignacion.grupo.codigo}
+          </span>
+        </p>
+      ) : (
+        <p className="text-[12px] leading-tight font-semibold text-texto">
+          Grupo eliminado
+        </p>
+      )}
       {mostrarDocente && (
         <p
           className="mt-0.5 text-[11px] text-texto-suave"
@@ -79,7 +87,7 @@ export function GrillaHorario({
   return (
     <div>
       <div className="hidden overflow-x-auto md:block">
-        <table className="w-full min-w-[760px] table-fixed border-collapse text-sm">
+        <table className="sin-resaltado w-full min-w-[760px] table-fixed border-collapse text-sm">
           <caption className="sr-only">
             Horario semanal ordenado de la mañana a la noche
           </caption>

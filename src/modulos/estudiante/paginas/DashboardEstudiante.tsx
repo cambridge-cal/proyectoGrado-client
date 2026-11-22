@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router'
 import { mensajeDeError } from '../../../compartido/api'
 import {
   Aviso,
+  BannerSaludo,
   EncabezadoPagina,
   EstadoVacio,
   Insignia,
@@ -26,7 +27,7 @@ function TarjetaEvaluacion({
     .map((grupo) => `${grupo.curso} (${grupo.codigo})`)
     .join(', ')
   return (
-    <Tarjeta className="flex flex-wrap items-center gap-x-4 gap-y-3 p-5">
+    <Tarjeta className="elevable flex flex-wrap items-center gap-x-4 gap-y-3 p-5">
       <div className="min-w-0 flex-1">
         <p className="text-[15px] font-bold text-texto">
           {evaluacion.docente.nombre}
@@ -87,8 +88,8 @@ export function DashboardEstudiante() {
           </Aviso>
         )}
         {consulta.isPending ? (
-          <Tarjeta
-            className="h-40 animate-pulse"
+          <div
+            className="esqueleto h-40 rounded-tarjeta"
             aria-label="Cargando evaluaciones"
           />
         ) : consulta.isError ? (
@@ -108,10 +109,37 @@ export function DashboardEstudiante() {
           </Tarjeta>
         ) : (
           <>
+            <BannerSaludo
+              titulo={
+                pendientes.length > 0
+                  ? 'Tu opinión ayuda a mejorar las clases'
+                  : 'Estás al día con tus evaluaciones'
+              }
+              descripcion="Nadie, ni el docente ni la academia, puede ver quién respondió cada evaluación."
+            >
+              <ul className="escalonado grid grid-cols-2 gap-3">
+                <li className="rounded-2xl bg-naranja-suave p-4 text-marino-900">
+                  <span className="block text-[26px] leading-none font-bold">
+                    {pendientes.length}
+                  </span>
+                  <span className="mt-1.5 block text-xs text-marino-900/70">
+                    por responder
+                  </span>
+                </li>
+                <li className="rounded-2xl bg-turquesa-suave p-4 text-marino-900">
+                  <span className="block text-[26px] leading-none font-bold">
+                    {evaluaciones.filter((e) => e.completada).length}
+                  </span>
+                  <span className="mt-1.5 block text-xs text-marino-900/70">
+                    respondidas
+                  </span>
+                </li>
+              </ul>
+            </BannerSaludo>
             {pendientes.length > 0 && (
               <section
                 aria-label="Evaluaciones pendientes"
-                className="space-y-3"
+                className="escalonado space-y-3"
               >
                 <h2 className="text-sm font-bold text-texto">Pendientes</h2>
                 {pendientes.map((evaluacion) => (
@@ -125,7 +153,7 @@ export function DashboardEstudiante() {
             {resto.length > 0 && (
               <section
                 aria-label="Evaluaciones respondidas"
-                className="space-y-3"
+                className="escalonado space-y-3"
               >
                 <h2 className="text-sm font-bold text-texto">
                   Respondidas o cerradas

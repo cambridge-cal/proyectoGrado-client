@@ -175,7 +175,7 @@ export function GenerarHorario() {
         descripcion="El motor combina Algoritmo Genético, Búsqueda Tabú y validación semántica con Gemini (RF-17)."
       />
       <div className="space-y-5 p-4 sm:p-8">
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="escalonado grid grid-cols-2 gap-4 lg:grid-cols-4">
           <TarjetaEstadistica
             valor={valor(totalCursos)}
             etiqueta="Cursos registrados"

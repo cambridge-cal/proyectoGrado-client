@@ -8,7 +8,14 @@ export interface CampoProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 /** Campo de texto con etiqueta y mensaje de error en línea (RNF-14). */
-export function Campo({ etiqueta, error, ayuda, id, className, ...props }: CampoProps) {
+export function Campo({
+  etiqueta,
+  error,
+  ayuda,
+  id,
+  className,
+  ...props
+}: CampoProps) {
   const idGenerado = useId()
   const idCampo = id ?? idGenerado
   const idMensaje = `${idCampo}-mensaje`
@@ -23,7 +30,7 @@ export function Campo({ etiqueta, error, ayuda, id, className, ...props }: Campo
         aria-invalid={error ? true : undefined}
         aria-describedby={error || ayuda ? idMensaje : undefined}
         className={cn(
-          'h-[46px] rounded-control border bg-superficie-2 px-3.5 text-sm text-texto',
+          'h-[46px] rounded-control border bg-superficie-2 px-3.5 text-sm text-texto transition-[border-color,background-color,box-shadow] duration-150 hover:border-texto-suave/40',
           'placeholder:text-texto-suave focus:border-primario focus:bg-superficie focus:outline-none',
           'focus:ring-4 focus:ring-primario/15',
           error ? 'border-peligro' : 'border-borde',
@@ -31,7 +38,11 @@ export function Campo({ etiqueta, error, ayuda, id, className, ...props }: Campo
         {...props}
       />
       {error ? (
-        <p id={idMensaje} className="text-xs text-peligro-texto" role="alert">
+        <p
+          id={idMensaje}
+          className="animate-entrar text-xs text-peligro-texto"
+          role="alert"
+        >
           {error}
         </p>
       ) : (

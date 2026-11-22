@@ -42,7 +42,7 @@ export function PanelLateral({
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div
-        className="absolute inset-0 bg-marino-900/40"
+        className="absolute inset-0 animate-aparecer bg-marino-900/40 backdrop-blur-[2px]"
         onClick={onCerrar}
         aria-hidden
       />
@@ -52,7 +52,7 @@ export function PanelLateral({
         aria-modal="true"
         aria-labelledby={idTitulo}
         tabIndex={-1}
-        className="relative flex h-full w-full max-w-[440px] flex-col bg-superficie shadow-xl focus:outline-none"
+        className="relative flex h-full w-full max-w-[440px] animate-panel flex-col bg-superficie shadow-xl focus:outline-none"
       >
         <div className="flex items-start gap-3 border-b border-borde px-6 py-5">
           <div className="min-w-0 flex-1">

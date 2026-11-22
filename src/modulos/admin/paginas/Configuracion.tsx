@@ -62,7 +62,7 @@ export function Configuracion() {
               aria-controls="panel-configuracion"
               onClick={() => abrir(p.id)}
               className={cn(
-                '-mb-px shrink-0 border-b-2 px-3.5 py-2.5 text-[13px] font-medium transition-colors',
+                '-mb-px shrink-0 rounded-t-lg border-b-2 px-3.5 py-2.5 text-[13px] font-medium transition-colors duration-200 hover:bg-superficie-2',
                 actual === p.id
                   ? 'border-primario text-primario'
                   : 'border-transparent text-texto-suave hover:text-texto',
@@ -76,8 +76,10 @@ export function Configuracion() {
         {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
 
         <Tarjeta
+          key={actual}
           id="panel-configuracion"
           role="tabpanel"
+          className="animate-entrar"
           aria-labelledby={`pestana-${actual}`}
         >
           {actual === 'periodos' && <PestanaPeriodos {...props} />}

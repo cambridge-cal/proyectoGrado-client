@@ -27,7 +27,21 @@ export const servicioAuditoria = {
     ).data,
 }
 
-/** Convierte el detalle guardado en JSON a una línea legible. */
+/** Nombres legibles de los campos que aparecen en el detalle de la auditoría. */
+const ETIQUETAS: Record<string, string> = {
+  codigo: 'código',
+  nombre: 'nombre',
+  fitness: 'aptitud',
+  estadoValidacion: 'validación',
+  version: 'versión',
+  motivo: 'motivo',
+  total: 'total',
+}
+
+/**
+ * Convierte el detalle guardado en JSON a una línea legible. Omite los identificadores
+ * internos (campos terminados en "Id"), que no le dicen nada al Administrador.
+ */
 export function detalleLegible(registro: RegistroAuditoria): string {
   if (!registro.detalle) return ''
   try {
@@ -39,7 +53,18 @@ export function detalleLegible(registro: RegistroAuditoria): string {
     if (typeof datos.rol === 'string') partes.push(`rol ${datos.rol}`)
     if (typeof datos.resultado === 'string')
       partes.push(`resultado ${datos.resultado}`)
-    return partes.join(' · ') || registro.detalle
+    if (typeof datos.validadoGemini === 'boolean')
+      partes.push(
+        datos.validadoGemini ? 'validado por Gemini' : 'sin validar por Gemini',
+      )
+    for (const [clave, etiqueta] of Object.entries(ETIQUETAS)) {
+      const valor = datos[clave]
+      if (typeof valor === 'string' || typeof valor === 'number')
+        partes.push(`${etiqueta} ${valor}`)
+    }
+    if (partes.length > 0) return partes.join(' · ')
+    const visibles = Object.keys(datos).filter((k) => !/Id$|^id$/.test(k))
+    return visibles.length === 0 ? '' : registro.detalle
   } catch {
     return registro.detalle
   }

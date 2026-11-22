@@ -115,10 +115,7 @@ export function Alertas() {
         )}
 
         {periodos.isPending || (periodo && lista.isPending) ? (
-          <Tarjeta
-            className="h-48 animate-pulse"
-            aria-label="Cargando alertas"
-          />
+          <Tarjeta className="h-48 esqueleto" aria-label="Cargando alertas" />
         ) : error ? (
           <Aviso tipo="error">{mensajeDeError(error)}</Aviso>
         ) : !periodo ? (

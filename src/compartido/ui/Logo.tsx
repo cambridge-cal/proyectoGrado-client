@@ -1,16 +1,32 @@
 import { cn } from '../utilidades'
 
-/** Marca "C" de Cambridge Academy. */
-export function Logo({ className }: { className?: string }) {
+const ARCHIVOS = {
+  color: '/escudo-cambridge.png',
+  blanco: '/escudo-cambridge-blanco.png',
+}
+
+/**
+ * Escudo de Cambridge Academy of Languages. Es decorativo: junto a él siempre aparece el
+ * nombre de la academia en texto, así que se oculta a los lectores de pantalla.
+ */
+export function Logo({
+  className,
+  variante = 'color',
+}: {
+  className?: string
+  /** "color" sobre fondos claros, "blanco" sobre el azul marino de la marca. */
+  variante?: 'color' | 'blanco'
+}) {
   return (
-    <span
-      className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-lg bg-white/15 font-bold text-white',
-        className ?? 'size-9 text-[17px]',
-      )}
+    <img
+      src={ARCHIVOS[variante]}
+      alt=""
       aria-hidden
-    >
-      C
-    </span>
+      draggable={false}
+      className={cn(
+        'shrink-0 object-contain select-none',
+        className ?? 'h-9 w-auto',
+      )}
+    />
   )
 }
