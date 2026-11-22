@@ -1,0 +1,23 @@
+# DOMINIO llega como variable de entorno (por ejemplo sistema-cal.westus2.cloudapp.azure.com).
+# Caddy pide y renueva solo el certificado de Let's Encrypt y usa TLS 1.2 o superior (RNF-07).
+{$DOMINIO} {
+	encode zstd gzip
+
+	handle /api/* {
+		reverse_proxy app:3000
+	}
+
+	handle {
+		root * /srv
+		# Rutas de React Router: cualquier ruta que no sea un archivo devuelve index.html.
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}

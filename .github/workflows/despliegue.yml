@@ -1,0 +1,39 @@
+name: Despliegue
+
+# Con cada push a main actualiza la máquina de producción (Azure for Students).
+# El proceso completo está en proyectoGrado-server/docs/produccion.md.
+# Se activa con la variable del repositorio DEPLOY_HABILITADO = true y los secretos
+# DEPLOY_HOST, DEPLOY_USER y DEPLOY_KEY (los mismos del repositorio del servidor).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: despliegue
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Desplegar a producción
+    runs-on: ubuntu-latest
+    if: vars.DEPLOY_HABILITADO == 'true'
+    environment:
+      name: production
+      url: https://sistema-cal.westus2.cloudapp.azure.com
+    steps:
+      - name: Desplegar vía SSH
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/despliegue
+          chmod 600 ~/.ssh/despliegue
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/despliegue "$DEPLOY_USER@$DEPLOY_HOST" \
+            /opt/sistema-cal/servidor/despliegue/actualizar.sh
